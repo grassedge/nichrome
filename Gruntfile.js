@@ -88,8 +88,8 @@ module.exports = function(grunt) {
                 tasks: ['less', 'cssmin']
             },
             typescript: {
-                files: ['public/less/*.less'],
-                tasks: ['typescript', 'uglify']
+                files: ['src/nichrome/**/*.ts'],
+                tasks: ['typescript']
             }
         },
     });
