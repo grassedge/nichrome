@@ -1,0 +1,25 @@
+{
+    "name": "nichrome",
+    "description": "2ch browser",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "app": {
+        "launch": {
+            "local_path": "public/html/index.html"
+        }
+    },
+    "icons": {
+        "16" : "public/img/icon_16.png",
+        "128": "public/img/icon_128.png"
+    },
+    "permissions": [
+        "http://*.2ch.net/",
+        "http://*.machi.to/",
+        "http://*.bbspink.com/",
+
+        "unlimitedStorage",
+        "notifications",
+        "geolocation",
+        "background"
+    ]
+}
