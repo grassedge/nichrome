@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="shift_jis">
+    <link rel="stylesheet" type="text/css" href="/public/css/jquery-ui-1.10.1.custom.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/nichrome.min.css" />
+    <script type="text/javascript" src="/public/js/jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="/public/js/jquery-ui-1.10.1.custom.js"></script>
+    <script type="text/javascript" src="/public/js/underscore.js"></script>
+
+    <script type="text/javascript" src="/public/js/jst.js"></script>
+
+    <script type="text/javascript" src="/public/js/src/nichrome/Core.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/Event.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/model/BBS.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/model/Board.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/model/Thread.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/service/BBS.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/service/Board.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/service/Thread.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/controller/BBS.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/controller/Board.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/controller/Thread.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/app.js"></script>
+  </head>
+  <body>
+    <div id="app-container">
+      <aside class="bbs-container">
+        <header class="bbs-header">
+          <div class="header-center"><div class="app-title">Nichrome</div></div>
+        </header>
+        <div class="bbs-content"></div>
+        <footer class="bbs-footer">
+        </footer>
+      </aside>
+      <aside class="board-container">
+        <div class="popup-menu" style="display:none;">
+          <p class="menu-list-item" data-by="momentum">sort by momentum</p>
+          <p class="menu-list-item" data-by="comment_count">sort by res count</p>
+          <p class="menu-list-item" data-by="number">sort by thread number</p>
+          <p class="menu-list-item" data-by="created_at">sort by created timestamp</p>
+        </div>
+        <header class="board-container-header">
+          <div class="header-left">
+            <button class="pictgram reload-board-button">reload</button>
+          </div>
+          <div class="header-center"></div>
+          <div class="header-right">
+            <button class="pictgram sort-menu-button">menu</button>
+          </div>
+        </header>
+        <div class="board-content tab-horizontal">
+          <div class="thread-list-container"></div>
+        </div>
+        <footer class="board-container-footer">
+          <div class="footer-left">
+            <button class="pictgram toggle-bbs-button" style="font-size:22px;padding-top:4px">left</button>
+          </div>
+          <div class="footer-center"></div>
+          <div class="footer-right">
+            <button class="pictgram" style="font-size:22px;padding-top:4px">search</button>
+          </div>
+        </footer>
+      </aside>
+      <div class="thread-container">
+        <header class="thread-container-header">
+          <div class="header-left">
+            <button class="pictgram reload-thread-button">reload</button>
+            <button class="pictgram trash-button">trash</button>
+          </div>
+          <div class="header-center"></div>
+          <div class="header-right">
+            <button class="pictgram settings-button">setting</button>
+          </div>
+        </header>
+        <div class="thread-content tab-horizontal"></div>
+        <!-- <footer class="thread-container-footer"> -->
+        <!-- </footer> -->
+      </div>
+    </div>
+    <div class="settings-container" style="padding: 20px;">
+      <label>
+        <input class="thread-tab-orient"
+               name="thread-tab-orient"
+               type="radio" value="tab-horizontal">top
+      </label>
+      <label>
+        <input class="thread-tab-orient"
+               name="thread-tab-orient"
+               type="radio" value="tab-vertical">left
+      </label>
+    </div>
+  </body>
+</html>

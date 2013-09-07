@@ -5,7 +5,7 @@
     "manifest_version": 2,
     "app": {
         "launch": {
-            "local_path": "public/html/index.html"
+            "local_path": "index"
         }
     },
     "icons": {
