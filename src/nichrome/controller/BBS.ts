@@ -1,3 +1,4 @@
+/// <reference path="../Model/Board.ts" />
 /// <reference path="../service/BBS.ts" />
 /// <reference path="../service/Board.ts" />
 
@@ -6,43 +7,59 @@ declare var JST:any;
 module Nicr.Controller {
 
     export class BBS {
-        $el: JQuery;
-        model: any;
-        bbsService: Service.BBS;
-        boardService: Service.Board;
+        private $el: JQuery;
+        private categories: any;
+        private boards: IndexedList<Model.Board>;
+
+        private configService:Service.Config;
+        private bbsService: Service.BBS;
+        private boardService: Service.Board;
 
         constructor(args:{
             $el:JQuery;
+            configService:Service.Config;
             bbsService:Service.BBS;
             boardService:Service.Board;
         }) {
             this.$el = args.$el;
+            this.configService = args.configService;
             this.bbsService = args.bbsService;
             this.boardService = args.boardService;
 
-            this.bbsService.on('fetch', (event) => {
-                this.model = event.bbsData;
-                this.render(event.bbsData);
-            });
+            this.bbsService.on('fetch', (e) => this.onFetch(e));
             this.$el.on('click', '.category-name', (e) => this.onClickCategoryName(e));
             this.$el.on('click', '.board-list-item', (e) => this.onClickBoardListItem(e));
+
+            var visibility = this.configService.getBBSContainerVisibility();
+            this.$el.toggle(visibility);
         }
 
-        render(bbsData) {
-            var html = JST['category']({bbsData:bbsData});
+        private render() {
+            var html = JST['category']({categories:this.categories});
             this.$el.find('.bbs-content').html(html);
         }
 
-        onClickCategoryName(event) {
+        private onFetch(event) {
+            this.categories = event.categories;
+            this.boards     = event.boards;
+            this.render();
+        }
+
+        private onClickCategoryName(event) {
             var $categoryListItem = $(event.currentTarget).closest('.category-list-item');
             $categoryListItem.toggleClass('selected');
             $categoryListItem.find('.board-list').toggle();
         }
 
-        onClickBoardListItem(event) {
+        private onClickBoardListItem(event) {
             var $boardListItem = $(event.currentTarget);
-            $boardListItem.toggleClass('selected');
-            this.boardService.openBoard($boardListItem.attr('data-href'));
+            var boardKey = $boardListItem.attr('data-board-key');
+            if (boardKey) {
+                $boardListItem.toggleClass('selected');
+                this.boardService.openBoard(this.boards.get(boardKey));
+            } else {
+                window.open($boardListItem.attr('data-href'));
+            }
         }
     }
 }
