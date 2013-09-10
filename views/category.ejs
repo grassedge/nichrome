@@ -1,0 +1,14 @@
+<ul class="category-list">
+  <% bbsData.map(function(data) { %>
+  <li class="category-list-item">
+    <p class="category-name"><%= data.name %></p>
+    <ul class="board-list" style="display:none">
+      <% data.boards.forEach(function(board) { %>
+      <li class="board-list-item"
+          data-board-key="<%= board.boardKey %>"
+          data-href="<%= board.url %>"><%= board.title %></li>
+      <% }) %>
+    </ul>
+  </li>
+  <% }) %>
+</ul>
