@@ -1,0 +1,181 @@
+/* board */
+@board-container-width: 325px;
+@board-title-height: 25px;
+.board-container {
+    width: @board-container-width;
+    border-right: 1px solid #bbb;
+    font-size: 14px;
+    .vbox;
+    .popup-menu {
+        .popup;
+        box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
+        background-color: rgba(255,255,255,0.95);
+        top: @page-header-height - 10;
+        right: 5px;
+        .menu-list-item {
+            padding: 2px 20px;
+        }
+        .menu-list-item:hover {
+            color: white;
+            background-color: blue;
+        }
+    }
+}
+.board-container-header {
+    .page-header;
+    .header-center {
+        .board-name {
+            color: #555;
+            text-decoration: none;
+            text-shadow: 0 1px 1px #fff;
+            font-weight: bold;
+        }
+        padding-top: 7px;
+        text-align: center;
+    }
+}
+.board-content {
+    .page-content;
+    .vbox;
+    /* board-tab */
+    .board-tab {
+        margin:0;
+        padding:0;
+        background-color: #c5c5c5;
+        .board-tab-item {
+            .tab-item;
+            height: 20px;
+            width: 100px;
+        }
+    }
+    .board-title {
+        height: @board-title-height;
+        width: 100%;
+        border-bottom: 1px solid #bbb;
+        background-color: #f0f0f0;
+        h3 {
+            margin: 0;
+            font-size: small;
+            font-weight: nomal;
+            text-align: center;
+            line-height: @board-title-height;
+            a {
+                color: #555;
+                text-decoration: none;
+                text-shadow: 0 2px 1px #fff;
+            }
+        }
+        .sort-button {
+            background-color: transparent;
+            border: 0px solid transparent;
+        }
+    }
+    .empty-pattern {
+        display:none;
+        bottom: 0; left: 0; right: 0;
+        margin: 10px;
+        border: 1px dashed #ccc;
+        border-radius: 10px;
+    }
+    .thread-list-filter-container {
+        border-bottom: 1px solid #bbb;
+        background-color: #f0f0f0;
+        padding: 2px 10px 1px 10px;
+    }
+    .thread-list-filter {
+        input {
+            border-radius: 1em;
+            border-width: 1px;
+            width:100%;
+            font-size:1em;
+            paddint-left:10px;
+        }
+    }
+    .board {
+        background-image: url('/public/img/ajax-loader.gif');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+.board-container-footer {
+    .page-footer;
+    .footer-center {
+        .board-meta {
+            color: #555;
+            text-shadow: 0 1px 1px #fff;
+            font-size: small;
+        }
+        padding-top: 7px;
+        text-align: center;
+    }
+}
+
+div.board {
+    .box-flex;
+    /* overflow-y: scroll; */
+    overflow-x: hidden;
+    min-width:1px;
+    min-height:1px;
+    .vbox;
+    .thread-list {
+        .box-flex;
+        margin: 0;
+        padding: 0;
+        overflow-y: scroll;
+        background-color: white;
+        min-height: 1px;
+        .thread-list-item,
+        .thread-list-header {
+            width:100%;
+            .hbox;
+            background-color:white;
+            cursor: default;
+            &:nth-child(even) {
+                background-color:#f3f6fa;
+            }
+            div.thread-title {
+                .box-flex;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                padding-left: 5px;
+                min-width: 1px;
+                padding-top:2px;
+            }
+            .number, .momentum, .res-count {
+                text-align: center;
+                font-size: smaller;
+                padding-top: 4px;
+            }
+            .number {
+                width: 3em;
+                border-right:1px solid white;
+            }
+            .momentum {
+                width: 4em;
+                border-left:1px solid white;
+            }
+            .res-count {
+                width: 3em;
+                border-left:1px solid white;
+            }
+        }
+        li.thread-list-item.selected {
+            background-color: #d4d4d4;
+        }
+        li.thread-list-item.opening {
+            font-weight: bold;
+        }
+        li.thread-list-header {
+            font-size: x-small;
+            border-bottom: 1px solid #bbb;
+        }
+    }
+}
+
+aside.board-container.selected div.board
+ul.thread-list li.thread-list-item.selected {
+    background-color: #3875d7;
+    color: white;
+}
+
