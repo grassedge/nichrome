@@ -22,6 +22,17 @@ module Nicr {
             this.index[value.id()] = value;
         }
 
+        splice(index:number, howMany:number, ...values:T[]) {
+            var args = [index, howMany].concat(values);
+            var removed = Array.prototype.splice.apply(this.list, args);
+            values.forEach((value) => {
+                this.index[value.id()] = value;
+            });
+            removed.forEach((value) => {
+                delete this.index[value.id()];
+            })
+        }
+
         set(idx:number, value:T) {
             this.list[idx] = value;
             this.index[value.id()] = value;
@@ -33,6 +44,10 @@ module Nicr {
 
         get(key:string):T {
             return this.index[key];
+        }
+
+        indexOf(value:T):number {
+            return this.list.indexOf(value);
         }
 
         getList():T[] {
