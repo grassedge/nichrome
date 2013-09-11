@@ -1,15 +1,19 @@
 module Nicr {
     export class Event {
 
-        handlers:any;
+        private handlers:any = {};
 
-        constructor() {
-            this.handlers = {};
-        }
-
-        on(name, func) {
+        on(name:string, func:(...values:any[]) => any) {
             if (!this.handlers[name]) this.handlers[name] = [];
             this.handlers[name].push(func);
+        }
+
+        off(name?) {
+            if (name === undefined) {
+                this.handlers = {};
+            } else {
+                this.handlers[name] = [];
+            }
         }
 
         emit(name, event) {
