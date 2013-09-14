@@ -42,8 +42,18 @@ module Nicr.Service {
         }
 
         openBoard(board:Model.Board) {
-            this.emit('open:board', {board:board});
-            return this.fetchWithCache(board);
+            this.emit('add:board', {board:board});
+            this.emit('select:board', {board:board});
+            this.fetchWithCache(board);
+        }
+
+        selectBoard(board:Model.Board) {
+            this.emit('select:board', {board:board});
+            this.saveActiveTabToStorage(board.id());
+        }
+
+        reloadActiveBoard() {
+            this.emit('reload:board:active', {});
         }
 
         closeBoard(board:Model.Board) {
@@ -68,7 +78,7 @@ module Nicr.Service {
             delete this.storage.removeItem('nicr:board-' + board.boardKey);
         }
 
-        saveActiveTabToStorage(boardKey:string) {
+        private saveActiveTabToStorage(boardKey:string) {
             this.storage.setItem('nicr:board-tab-active', boardKey);
         }
 
