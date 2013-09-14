@@ -32,6 +32,12 @@ module Nicr.Model {
             };
         }
 
+        threadUrl() {
+            return 'http://' + this.host +
+                '/test/read.cgi/' + this.boardKey +
+                '/' + this.threadKey + '/';
+        }
+
         datUrl():string {
             return 'http://' + this.host +
                 '/' + this.boardKey +

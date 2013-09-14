@@ -1,4 +1,4 @@
-<a href="<%= thread.url %>" class="thread-title" target="_blank"><%= thread.title %></a>
+<a href="<%= thread.threadUrl() %>" class="thread-title" target="_blank"><%= thread.title %></a>
 <% if (thread.commentCount) { %>
 <span class="res-count"><%= thread.commentCount %></span>
 <% } %>
