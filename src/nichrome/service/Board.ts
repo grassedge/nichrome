@@ -54,7 +54,7 @@ module Nicr.Service {
 
         // ---- cache with local storage ----
 
-        saveToStorage(boardKey:string, threads:Model.Thread[]) {
+        private saveToStorage(boardKey:string, threads:Model.Thread[]) {
             this.storage.setItem('nicr:board-' + boardKey, JSON.stringify(threads));
         }
 
@@ -64,7 +64,7 @@ module Nicr.Service {
             return JSON.parse(cache).map((thread) => new Model.Thread(thread));
         }
 
-        removeFromCache(board:Model.Board) {
+        private removeFromCache(board:Model.Board) {
             delete this.storage.removeItem('nicr:board-' + board.boardKey);
         }
 
