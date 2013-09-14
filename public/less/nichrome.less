@@ -93,26 +93,48 @@
     );
 }
 
+.tab {
+    margin:0;
+    padding:0;
+    background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#ccc),to(#f0f0f0));
+}
+
 .tab-item {
     float: left;
-    margin: 2px;
-    padding: 2px;
+    padding: 2px 0 0 5px;
+
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    background-color: #d5d5d5;
-    font-size: small;
-    color: #666;
-    cursor: pointer;
-    border-radius: 2px;
+
+    user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
+
+    font-size: 14px;
+    color: #444;
+    text-shadow: 0 1px 1px #fff;
+    cursor: pointer;
+
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+
+    background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#e0e0e0),to(#ccc));
+
+    /* height: 21px; */
+    /* line-height: 21px; */
+
     .delete-tab-button {
         .ligature-symbols;
         font-size: large;
     }
+
     &.selected {
-        background-color: #f0f0f0;
+        color: #222;
+        background-image: none;
+        background-color: #f9f9f9;
     }
 }
 
