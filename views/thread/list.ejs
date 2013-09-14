@@ -1,5 +1,5 @@
 <% threads.forEach(function(thread) { %>
-<li class="thread-list-item">
+<li data-thread-key="<%= thread.threadKey %>" class="thread-list-item">
   <div class="number"><%= thread.number %></div>
   <div class="thread-title"><%= thread.title %></div>
   <div class="momentum"><%= thread.momentum %></div>
