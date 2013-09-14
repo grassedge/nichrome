@@ -1,40 +1,89 @@
 /// <reference path="../Event.ts" />
+/// <reference path="../model/Board.ts" />
 /// <reference path="../model/Thread.ts" />
 
 module Nicr.Service {
 
     export class Board extends Event {
 
-        private parse2chUrl(url:string) {
-            var match = url.match(/\/\/([^\/]+\.2ch\.net)\/([^\/]+)\//);
-            if (!match) return;
-            return {
-                host: match[1],
-                boardKey: match[2]
-            }
+        storage:Storage;
+
+        constructor() {
+            super();
+            this.storage = window.localStorage;
         }
 
-        assembleSubjectUrl(host:string, boardKey:string):string {
-            return 'http://' + host + '/' + boardKey + '/' + 'subject.txt';
-        }
-
-        fetch(host:string, boardKey:string) {
-            var url = this.assembleSubjectUrl(host, boardKey);
-            return $.get(url).then((subjectText) => {
+        fetch(board:Model.Board):JQueryPromise<any> {
+            var url = board.subjectUrl();
+            return $.ajax(url, {
+                mimeType: 'text/plain; charset=shift_jis'
+            }).then((subjectText) => {
                 var threads = Model.Thread.fromSubjectText(subjectText);
-                this.emit('fetch', threads);
-                return subjectText;
+                threads.forEach((thread) => {
+                    thread.boardKey = board.boardKey;
+                    thread.host = board.host;
+                });
+                board.threadSize = threads.length;
+                this.emit('fetch:' + board.boardKey, threads);
+                return threads;
             });
         }
 
-        openBoard(url:string) {
-            var parsed = this.parse2chUrl(url);
-            if (!parsed) {
-                window.open(url);
-                return;
+        fetchWithCache(board:Model.Board, args:any = {}) {
+            var threads = this.retrieveFromStorage(board);
+            if (!args.force && threads) {
+                this.emit('fetch:' + board.boardKey, threads);
+                return $.Deferred().resolve(threads).promise();
+            } else {
+                return this.fetch(board).then((threads) => {
+                    this.saveToStorage(board.boardKey, threads);
+                });
             }
-            this.emit('open:board', parsed);
-            return this.fetch(parsed.host, parsed.boardKey);
+        }
+
+        openBoard(board:Model.Board) {
+            this.emit('open:board', {board:board});
+            return this.fetchWithCache(board);
+        }
+
+        closeBoard(board:Model.Board) {
+            this.emit('close:board', {board:board});
+            this.emit('close:board:' + board.boardKey, {board:board});
+            this.removeFromCache(board);
+        }
+
+        // ---- cache with local storage ----
+
+        saveToStorage(boardKey:string, threads:Model.Thread[]) {
+            this.storage.setItem('nicr:board-' + boardKey, JSON.stringify(threads));
+        }
+
+        retrieveFromStorage(board:Model.Board):Model.Thread[] {
+            var cache = this.storage.getItem('nicr:board-' + board.boardKey);
+            if (!cache) return;
+            return JSON.parse(cache).map((thread) => new Model.Thread(thread));
+        }
+
+        removeFromCache(board:Model.Board) {
+            delete this.storage.removeItem('nicr:board-' + board.boardKey);
+        }
+
+        saveActiveTabToStorage(boardKey:string) {
+            this.storage.setItem('nicr:board-tab-active', boardKey);
+        }
+
+        retrieveActiveTabFromStorage():string {
+            return this.storage.getItem('nicr:board-tab-active');
+        }
+
+        saveTabToStorage(tab:Model.Board[]) {
+            this.storage.setItem('nicr:board-tab', JSON.stringify(tab));
+        }
+
+        retrieveTabFromStorage():Model.Board[] {
+            var tab = this.storage.getItem('nicr:board-tab');
+            if (!tab) return [];
+            return JSON.parse(tab).map((board) => new Model.Board(board));
         }
     }
 }
