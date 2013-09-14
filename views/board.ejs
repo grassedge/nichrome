@@ -1,6 +1,12 @@
 <div class="board" id="thread-list-<%= board.boardKey %>" style="display:none;">
+  <div class="thread-list-header">
+    <div class="number">No</div>
+    <div class="thread-title"><%= msg['label.title'] %></div>
+    <div class="momentum"><%= msg['label.momentum'] %></div>
+    <div class="res-count"><%= msg['label.resSize'] %></div>
+  </div>
+  <ul class="thread-list"></ul>
   <div class="thread-list-filter-container">
     <form class="thread-list-filter"><input type="text"></form>
   </div>
-  <ul class="thread-list"></ul>
 </div>
