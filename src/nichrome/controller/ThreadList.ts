@@ -29,6 +29,7 @@ module Nicr.Controller {
             this.boardService.on('close:board:' + this.model.boardKey, (e) => { this.onClose(e); });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
+            this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
         }
 
         private render() {
@@ -52,6 +53,13 @@ module Nicr.Controller {
             var threadKey = $threadListItem.attr('data-thread-key');
             var key = this.model.boardKey + '-' + threadKey;
             this.threadService.openThread(this.threads.get(key));
+        }
+
+        private onSubmitFilter(event) {
+            event.preventDefault();
+            var query = $(event.target).find('input').val();
+            this.$el.find('.thread-list-item').hide();
+            this.$el.find('.thread-list-item:contains(' + query + ')').show();
         }
     }
 }
