@@ -1,8 +1,0 @@
-div.settings-container {
-    position:absolute;
-    top:@page-header-height;
-    bottom:0;
-    left:0; right:0;
-    background-color: white;
-    display: none;
-}
