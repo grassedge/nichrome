@@ -20,8 +20,25 @@ module Nicr.Controller {
             this.tabModels = new IndexedList();
 
             this.threadService.on('open:thread', (e) => { this.onOpenThread(e) });
+            this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
 
             this.$el.on('click', '.thread-tab-item', (e) => { this.onClickThreadTabItem(e) });
+            this.$el.on('dblclick', '.thread-tab-item', (e) => { this.onDblclickThreadTabItem(e) });
+
+            this.setup();
+        }
+
+        private setup() {
+            // take before openThread() because of override.
+            var activeKey = this.threadService.retrieveActiveTabFromStorage();
+
+            var tab = this.threadService.retrieveTabFromStorage();
+            tab.forEach((thread) => {
+                this.threadService.openThread(thread);
+            });
+
+            var thread = this.tabModels.get(activeKey);
+            if (thread) this.selectThread(thread);
         }
 
         private addThread(thread:Model.Thread) {
@@ -36,6 +53,17 @@ module Nicr.Controller {
                 thread:thread,
                 threadService:this.threadService
             });
+            this.threadService.saveTabToStorage(this.tabModels.getList());
+        }
+
+        private deleteThread(thread:Model.Thread):number {
+            var having = this.tabModels.get(thread.id());
+            if (!having) return;
+            var idx = this.tabModels.indexOf(having);
+            this.tabModels.splice(idx, 1);
+            this.$el.find('#thread-tab-' + thread.id()).remove();
+            this.threadService.saveTabToStorage(this.tabModels.getList());
+            return idx;
         }
 
         private selectThread(thread:Model.Thread) {
@@ -46,9 +74,16 @@ module Nicr.Controller {
             this.activeThread = thread;
             this.$el.find('#thread-tab-' + thread.id()).addClass('selected');
             this.$el.find('#thread-' + thread.id()).show();
+            this.threadService.saveActiveTabToStorage(thread.id());
             if (!originalThread) return;
             this.$el.find('#thread-tab-' + originalThread.id()).removeClass('selected');
             this.$el.find('#thread-' + originalThread.id()).hide();
+        }
+
+        private selectThreadByIndex(index:number) {
+            var thread = this.tabModels.at(index)
+                     || this.tabModels.at(index - 1);
+            if (thread) this.selectThread(thread);
         }
 
         private setThreadTitle(thread:Model.Thread) {
@@ -60,6 +95,12 @@ module Nicr.Controller {
             var thread = event.thread;
             this.addThread(thread);
             this.selectThread(thread);
+        }
+
+        private onCloseThread(event) {
+            var thread = event.thread;
+            var idx = this.deleteThread(thread);
+            this.selectThreadByIndex(idx);
         }
 
         private onClickThreadTabItem(event) {
@@ -99,6 +140,7 @@ module Nicr.Controller {
             this.threadService = args.threadService;
 
             this.threadService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
+            this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
         }
 
         private render() {
@@ -110,6 +152,12 @@ module Nicr.Controller {
             this.comments = new IndexedList(event.comments);
             this.thread = event.thread;
             this.render();
+        }
+
+        private onClose(event) {
+            this.threadService.off('fetch:' + this.thread.id());
+            this.threadService.off('close:thread:' + this.thread.id());
+            this.$el.remove();
         }
     }
 }

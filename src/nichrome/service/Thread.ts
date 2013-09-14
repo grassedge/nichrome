@@ -38,5 +38,31 @@ module Nicr.Service {
             this.emit('open:thread', {thread:thread});
             return this.fetchWithCache(thread);
         }
+
+        closeThread(thread:Model.Thread) {
+            this.emit('close:thread', {thread:thread});
+            this.emit('close:thread:' + thread.id(), {thread:thread});
+            // this.removeFromCache();
+        }
+
+        // ---- cache with local storage ----
+
+        saveActiveTabToStorage(key:string) {
+            this.storage.setItem('nicr:thread-tab-active', key);
+        }
+
+        retrieveActiveTabFromStorage():string {
+            return this.storage.getItem('nicr:thread-tab-active');
+        }
+
+        saveTabToStorage(tab:Model.Thread[]) {
+            this.storage.setItem('nicr:thread-tab', JSON.stringify(tab));
+        }
+
+        retrieveTabFromStorage():Model.Thread[] {
+            var tab = this.storage.getItem('nicr:thread-tab');
+            if (!tab) return [];
+            return JSON.parse(tab).map((thread) => new Model.Thread(thread));
+        }
     }
 }
