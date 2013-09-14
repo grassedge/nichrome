@@ -97,6 +97,7 @@
     margin:0;
     padding:0;
     background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#ccc),to(#f0f0f0));
+    padding: 2px;
 }
 
 .tab-item {
@@ -111,20 +112,16 @@
     -moz-user-select: none;
     -webkit-user-select: none;
 
-    font-size: 14px;
-    color: #444;
+    font-size: small;
+    color: #888;
     text-shadow: 0 1px 1px #fff;
     cursor: pointer;
 
-    border-top: 1px solid #eee;
-    border-left: 1px solid #eee;
-    border-right: 1px solid rgba(0,0,0,0.1);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-
-    background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#e0e0e0),to(#ccc));
-
-    /* height: 21px; */
-    /* line-height: 21px; */
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-radius: 3px;
 
     .delete-tab-button {
         .ligature-symbols;
@@ -133,8 +130,11 @@
 
     &.selected {
         color: #222;
-        background-image: none;
-        background-color: #f9f9f9;
+        border-top: 1px solid #eee;
+        border-left: 1px solid #eee;
+        border-right: 1px solid rgba(0,0,0,0.1);
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#e0e0e0),to(#ccc));
     }
 }
 
