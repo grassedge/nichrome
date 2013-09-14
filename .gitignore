@@ -2,3 +2,8 @@
 node_modules
 d.ts
 *~
+public/js/src
+public/js/jst.js
+public/js/nichrome.min.js
+public/css/nichrome.css
+public/css/nichrome.min.css
