@@ -16,6 +16,7 @@
     <script type="text/javascript" src="/public/js/src/nichrome/model/BBS.js"></script>
     <script type="text/javascript" src="/public/js/src/nichrome/model/Board.js"></script>
     <script type="text/javascript" src="/public/js/src/nichrome/model/Thread.js"></script>
+    <script type="text/javascript" src="/public/js/src/nichrome/model/Comment.js"></script>
     <script type="text/javascript" src="/public/js/src/nichrome/service/Config.js"></script>
     <script type="text/javascript" src="/public/js/src/nichrome/service/BBS.js"></script>
     <script type="text/javascript" src="/public/js/src/nichrome/service/Board.js"></script>
@@ -53,7 +54,7 @@
           </div>
         </header>
         <div class="board-content tab-horizontal">
-          <div class="thread-list-container"></div>
+          <ul class="board-tab"></ul>
         </div>
         <footer class="board-container-footer">
           <div class="footer-left">
@@ -76,7 +77,9 @@
             <button class="pictgram settings-button">setting</button>
           </div>
         </header>
-        <div class="thread-content tab-horizontal"></div>
+        <div class="thread-content tab-horizontal">
+          <ul class="thread-tab"></ul>
+        </div>
         <!-- <footer class="thread-container-footer"> -->
         <!-- </footer> -->
       </div>
