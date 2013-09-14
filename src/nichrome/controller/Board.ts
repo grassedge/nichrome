@@ -206,7 +206,6 @@ module Nicr.Controller {
         }
 
         private onClose(event) {
-            this.boardService.removeFromCache(this.model);
             this.boardService.off('fetch:' + this.model.boardKey);
             this.boardService.off('close:board:' + this.model.boardKey);
             this.$el.remove();
