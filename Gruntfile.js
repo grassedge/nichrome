@@ -84,7 +84,7 @@ module.exports = function(grunt) {
                 tasks: ['jst']
             },
             less: {
-                files: ['public/less/*.less'],
+                files: ['public/less/*.less','public/less/lib/*.less'],
                 tasks: ['less', 'cssmin']
             },
             typescript: {
