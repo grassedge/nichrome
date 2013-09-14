@@ -3,22 +3,25 @@
 /// <reference path="./controller/BBS.ts" />
 
 Nicr.router.connect('index', function(match, location, guard) {
+    var configService = new Nicr.Service.Config();
     var bbsService = new Nicr.Service.BBS();
     var boardService = new Nicr.Service.Board();
     var threadService = new Nicr.Service.Thread();
 
     var bbsController = new Nicr.Controller.BBS({
         $el: $('.bbs-container'),
+        configService: configService,
         bbsService: bbsService,
         boardService: boardService
     });
     var boardController = new Nicr.Controller.Board({
         $el: $('.board-container'),
+        configService: configService,
         boardService: boardService,
         threadService: threadService,
     });
     var threadController = new Nicr.Controller.Thread({
-        el: $('.thread-container'),
+        $el: $('.thread-container'),
         threadService: threadService
     });
     bbsService.fetchWithCache();

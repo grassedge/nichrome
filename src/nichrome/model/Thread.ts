@@ -2,40 +2,55 @@ module Nicr.Model {
 
     export class Thread {
 
-        threadKey;
-        boardKey;
-        title;
-        commentCount;
-        number;
-        active;
+        boardKey:string;
+        threadKey:number;
+        title:string;
+        host:string;
+        commentCount:number;
+        number:number;
+        momentum:number;
 
         constructor(args) {
             for (var key in args) this[key] = args[key];
+            this.momentum = this.calcMomentum();
         }
 
-        static fromSubjectText(txt:string) {
+        static fromSubjectText(txt:string):Thread[] {
             var lines = txt.split(/\n/).filter((item) => { return item !== '' });
-            return lines.map((line, idx) => Thread.parseLine(line, idx + 1));
+            return lines.map((line, idx) => {
+                return new Thread(Thread.parseLine(line, idx + 1))
+            });
         }
 
         private static parseLine(line:string, idx:number) {
             var matched = line.match(/^(\d*?)\.dat<>(.*?) \((\d*?)\)/);
-            return new Thread({
+            return {
                 threadKey    : matched[1],
                 title        : matched[2],
                 commentCount : matched[3],
                 'number'     : idx
-            });
+            };
         }
 
-        calcMomentum() {
+        datUrl():string {
+            return 'http://' + this.host +
+                '/' + this.boardKey +
+                '/dat/' + this.threadKey + '.dat';
+        }
+
+        calcMomentum():number {
             var epoch = new Date().getTime();
             var elapse = (epoch - this.threadKey * 1000) / 1000 || 1;
             return Math.floor(24 * 60 * 60 * this.commentCount / elapse);
         }
 
-        savePath(boardKey, threadKey) {
-            return 'dat/' + boardKey + '/' + threadKey + '.dat';
+        equals(other:Thread):boolean {
+            if (!other) return false;
+            return this.id() === other.id();
+        }
+
+        id() {
+            return this.boardKey + '-' + this.threadKey;
         }
     }
 

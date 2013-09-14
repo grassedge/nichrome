@@ -38,12 +38,9 @@ module Nicr.Service {
                     return category;
                 });
 
-                this.emit('fetch', {
-                    categories : categories,
-                    boards     : boards
-                });
-
-                return { categories:categories, boards:boards };
+                var data = { categories:categories, boards:boards };
+                this.emit('fetch', data);
+                return data;
 
             }).fail((err) => {
                 // dat 落ち・削除済みの判断

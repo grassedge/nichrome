@@ -30,6 +30,10 @@ module Nicr.Controller {
             this.$el.on('click', '.category-name', (e) => this.onClickCategoryName(e));
             this.$el.on('click', '.board-list-item', (e) => this.onClickBoardListItem(e));
 
+            this.setup();
+        }
+
+        private setup() {
             var visibility = this.configService.getBBSContainerVisibility();
             this.$el.toggle(visibility);
         }

@@ -8,17 +8,17 @@ module Nicr.Service {
         }
 
         setBBSContainerVisibility(visible:boolean) {
-            this.storage.setItem('bbs-container-visibility', visible ? 'true' : 'false');
+            this.storage.setItem('nicr:config:show-bbs-container', visible ? 'true' : 'false');
         }
         getBBSContainerVisibility():boolean {
-            return this.storage.getItem('bbs-container-visibility') !== 'false';
+            return this.storage.getItem('nicr:config:show-bbs-container') !== 'false';
         }
 
         setBoardContainerWidth(width:number) {
-            this.storage.setItem('board-container-width', width + '');
+            this.storage.setItem('nicr:config:board-container-width', width + '');
         }
         getBoardContainerWidth():number {
-            return +this.storage.getItem('board-container-width') || 325;
+            return +this.storage.getItem('nicr:config:board-container-width') || 325;
         }
     }
 }

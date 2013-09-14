@@ -22,7 +22,7 @@ module Nicr {
             this.index[value.id()] = value;
         }
 
-        splice(index:number, howMany:number, ...values:T[]) {
+        splice(index:number, howMany:number, ...values:T[]):T[] {
             var args = [index, howMany].concat(values);
             var removed = Array.prototype.splice.apply(this.list, args);
             values.forEach((value) => {
@@ -31,6 +31,7 @@ module Nicr {
             removed.forEach((value) => {
                 delete this.index[value.id()];
             })
+            return removed;
         }
 
         set(idx:number, value:T) {
