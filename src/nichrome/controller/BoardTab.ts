@@ -31,7 +31,7 @@ module Nicr.Controller {
             this.boardService.on('fetch', (e) => { this.onFetch(e) });
 
             this.$el.on('click', '.board-tab-item', (e) => { this.onClickBoardTabItem(e) });
-            this.$el.on('dblclick', '.board-tab-item', (e) => { this.onDblclickBoardTabItem(e) });
+            this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
             this.$el.find('.board-tab').sortable();
             this.$el.on('sortstop', (e, ui) => { this.onSortStop(e, ui) });
 
@@ -140,8 +140,8 @@ module Nicr.Controller {
             this.boardService.selectBoard(board);
         }
 
-        private onDblclickBoardTabItem(event) {
-            var $tabItem = $(event.currentTarget);
+        private onClickCloseButton(event) {
+            var $tabItem = $(event.currentTarget).closest('.board-tab-item');
             var boardKey = $tabItem.attr('id').match(/^board-tab-(.+)$/)[1];
             var board = this.tabModels.get(boardKey);
             this.boardService.closeBoard(board);

@@ -45,6 +45,18 @@
         .board-tab-item {
             .tab-item;
             width: 100px;
+            position: relative;
+            .close-button {
+                .ligature-symbols;
+                position: absolute;
+                right: 5px;
+                top: 4px;
+                font-size: 16px;
+                display: none;
+            }
+            &:hover .close-button {
+                display: inline;
+            }
         }
     }
     .empty-pattern {
