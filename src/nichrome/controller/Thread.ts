@@ -22,6 +22,8 @@ module Nicr.Controller {
             this.threadService.on('open:thread', (e) => { this.onOpenThread(e) });
             this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
 
+            this.$el.on('click', '.trash-button', (e) => { this.onClickTrashButton(e) });
+            this.$el.on('click', '.reload-thread-button', (e) => { this.onClickReloadThreadButton(e) });
             this.$el.on('click', '.thread-tab-item', (e) => { this.onClickThreadTabItem(e) });
             this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
 
@@ -101,6 +103,14 @@ module Nicr.Controller {
             var thread = event.thread;
             var idx = this.deleteThread(thread);
             this.selectThreadByIndex(idx);
+        }
+
+        private onClickTrashButton(event) {
+            this.threadService.closeThread(this.activeThread);
+        }
+
+        private onClickReloadThreadButton(event) {
+            this.threadService.fetchWithCache(this.activeThread, {force:true});
         }
 
         private onClickThreadTabItem(event) {
