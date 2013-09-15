@@ -21,6 +21,9 @@ module Nicr.Controller {
 
             this.threadService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
             this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
+
+            this.$el.on('click', '.comment-list-up-button', (e) => { this.onUpButton(e) });
+            this.$el.on('click', '.comment-list-down-button', (e) => { this.onDownButton(e) });
         }
 
         private render() {
@@ -38,6 +41,14 @@ module Nicr.Controller {
             this.threadService.off('fetch:' + this.thread.id());
             this.threadService.off('close:thread:' + this.thread.id());
             this.$el.remove();
+        }
+
+        private onUpButton(event) {
+            this.$el.find('.comment-list').scrollTop(0);
+        }
+
+        private onDownButton(event) {
+            this.$el.find('.comment-list').scrollTop(10000000000); // irresponsible
         }
     }
 

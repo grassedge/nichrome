@@ -1,5 +1,5 @@
 <% comments.forEach(function(comment) { %>
-<li class="comment" data-comment-id="<%= comment.id() %>">
+<div class="comment" data-comment-id="<%= comment.id() %>">
   <span class="res-no"><%= comment.number %></span>
   <span class="name"><b><%= comment.name %></b></span>
   <span class="timestamp"><%= comment.createdAt %></span>
@@ -8,6 +8,6 @@
   <span class="author-id"><%= comment.authorId %></span>
   <% } %>
   <div class="body"><%= comment.replacedBody() %></div>
-</li>
+</div>
 <% }); %>
 
