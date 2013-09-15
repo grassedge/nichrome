@@ -4,10 +4,9 @@
 
 @import "lib/font.less";
 @import "lib/variables.less";
-
-/* temporary */
 @import "lib/ligature-symbols.less";
 
+/* temporary */
 .pictgram {
     .ligature-symbols;
 
@@ -35,50 +34,6 @@
     box-sizing: border-box;
 }
 
-.box-layout {
-    display: -moz-box;
-    display: -webkit-box;
-    display: -ms-box;
-    display: -o-box;
-    display: box;
-    min-width:1px;
-    min-height:1px;
-}
-
-.hbox {
-    .box-layout;
-}
-
-.hbox-reverse {
-    .hbox;
-    -webkit-box-direction: reverse;
-    -moz-box-direction: reverse;
-    -ms-box-direction: reverse;
-    -o-box-direction: reverse;
-    box-direction: reverse;
-    -webkit-box-pack: end;
-    -moz-box-pack: end;
-    -ms-box-pack: end;
-    -o-box-pack: end;
-    box-pack: end;
-}
-
-.vbox {
-    .box-layout;
-    -moz-box-orient:vertical;
-    -webkit-box-orient:vertical;
-    -ms-box-orient:vertical;
-    -o-box-orient:vertical;
-    box-orient:vertical;
-}
-
-.box-flex {
-    -moz-box-flex:1;
-    -webkit-box-flex:1;
-    -ms-box-flex:1;
-    -o-box-flex:1;
-}
-
 .gradation-bar {
     /* Chrome10+,Safari5.1+ */
     background: #bbbbbb;
@@ -93,47 +48,8 @@
     );
 }
 
-.tab {
-    margin:0;
-    padding:0;
-    padding: 2px;
-}
-
-.tab-item {
-    float: left;
-    margin: 2px;
-    padding: 2px 2px 0 2px;
-
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    text-align: center;
-
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-
-    font-size: small;
-    color: #888;
-    text-shadow: 0 1px 1px #fff;
-    cursor: pointer;
-
-    border: 1px solid #ccc;
-    border-radius: 3px;
-
-    .delete-tab-button {
-        .ligature-symbols;
-        font-size: large;
-    }
-
-    &.selected {
-        color: #222;
-        border-top: 1px solid #eee;
-        border-left: 1px solid #eee;
-        border-right: 1px solid rgba(0,0,0,0.1);
-        border-bottom: 1px solid rgba(0,0,0,0.2);
-        background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#e0e0e0),to(#ccc));
-    }
+.translucence {
+    opacity: 0.2;
 }
 
 .page-header {
@@ -160,23 +76,23 @@
     }
 }
 
-
 /* whole */
 
 html, body {
     margin: 0;
-    /* font-size: 14px; */
     height:100%;
 }
 
+/* common */
+@import "lib/box.less";
+@import "lib/tab.less";
+@import "lib/popup.less";
+/* page */
 #app-container {
     .hbox;
     height:100%;
     width:100%;
 }
-/* common */
-@import "lib/popup.less";
-/* page */
 @import "lib/bbs.less";
 @import "lib/board.less";
 @import "lib/thread.less";

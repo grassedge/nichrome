@@ -1,6 +1,6 @@
 /* board */
 @board-container-width: 325px;
-@board-title-height: 25px;
+
 .board-container {
     width: @board-container-width;
     border-right: 1px solid #bbb;
@@ -45,18 +45,6 @@
         .board-tab-item {
             .tab-item;
             width: 100px;
-            position: relative;
-            .close-button {
-                .ligature-symbols;
-                position: absolute;
-                right: 5px;
-                top: 4px;
-                font-size: 16px;
-                display: none;
-            }
-            &:hover .close-button {
-                display: inline;
-            }
         }
     }
     .empty-pattern {
@@ -86,6 +74,7 @@
         background-position: center;
     }
 }
+
 .board-container-footer {
     .page-footer;
     .footer-center {
@@ -197,8 +186,4 @@ div.board {
 .thread-list-item.selected {
     background-color: #3875d7;
     color: white;
-}
-
-.translucence {
-    opacity: 0.2;
 }
