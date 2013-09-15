@@ -15,6 +15,8 @@ module Nicr.Service {
 
         fetch(board:Model.Board):JQueryPromise<any> {
             var url = board.subjectUrl();
+            this.emit('fetch:start', {board:board});
+            this.emit('fetch:start:' + board.id(), {board:board});
             return $.ajax(url, {
                 mimeType: 'text/plain; charset=shift_jis'
             }).then((subjectText) => {

@@ -57,6 +57,12 @@ module Nicr.Controller {
             this.$el.find('.footer-center').html(footerHtml);
         }
 
+        private onFetch(event) {
+            var board = event.board;
+            var threads = event.threads;
+            this.setThreadListSize(board);
+        }
+
         private onSelectBoard(event) {
             var board = event.board;
             this.setBoardTitle(board);

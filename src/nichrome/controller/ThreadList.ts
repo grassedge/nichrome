@@ -25,8 +25,9 @@ module Nicr.Controller {
             this.boardService = args.boardService;
             this.threadService = args.threadService;
 
-            this.boardService.on('fetch:' + this.model.boardKey, (e) => { this.onFetch(e); });
-            this.boardService.on('close:board:' + this.model.boardKey, (e) => { this.onClose(e); });
+            this.boardService.on('fetch:' + this.model.id(), (e) => { this.onFetch(e); });
+            this.boardService.on('fetch:start:' + this.model.id(), (e) => { this.onFetchStart(e); });
+            this.boardService.on('close:board:' + this.model.id(), (e) => { this.onClose(e); });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
@@ -40,6 +41,11 @@ module Nicr.Controller {
         private onFetch(event) {
             this.threads = new IndexedList(event);
             this.render();
+            this.$el.find('.thread-list').removeClass('translucence');
+        }
+
+        private onFetchStart(event) {
+            this.$el.find('.thread-list').addClass('translucence');
         }
 
         private onClose(event) {
