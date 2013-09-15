@@ -2,6 +2,7 @@
 node_modules
 d.ts
 *~
+issue.txt
 public/js/src
 public/js/jst.js
 public/js/nichrome.min.js
