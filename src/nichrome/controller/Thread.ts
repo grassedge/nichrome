@@ -23,7 +23,7 @@ module Nicr.Controller {
             this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
 
             this.$el.on('click', '.thread-tab-item', (e) => { this.onClickThreadTabItem(e) });
-            this.$el.on('dblclick', '.thread-tab-item', (e) => { this.onDblclickThreadTabItem(e) });
+            this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
 
             this.setup();
         }
@@ -110,8 +110,8 @@ module Nicr.Controller {
             this.selectThread(thread);
         }
 
-        private onDblclickThreadTabItem(event) {
-            var $tabItem = $(event.currentTarget);
+        private onClickCloseButton(event) {
+            var $tabItem = $(event.currentTarget).closest('.thread-tab-item');
             var key = $tabItem.attr('id').match(/^thread-tab-(.+?)$/)[1];
             var thread = this.tabModels.get(key);
             this.threadService.closeThread(thread);
