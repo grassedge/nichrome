@@ -13,11 +13,13 @@ module Nicr.Model {
             title:string;
             host?:string;
             url?:string;
+            threadSize?:number;
         }) {
-            this.boardKey = args.boardKey;
-            this.title    = args.title;
-            this.host     = args.host;
-            this.url      = args.url;
+            this.boardKey   = args.boardKey;
+            this.title      = args.title;
+            this.host       = args.host;
+            this.url        = args.url;
+            this.threadSize = args.threadSize;
             if (args.url) {
                 var parsed = this.parse2chUrl(args.url);
                 if (parsed) {

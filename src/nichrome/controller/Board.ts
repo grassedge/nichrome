@@ -27,6 +27,7 @@ module Nicr.Controller {
             this.threadService = args.threadService;
 
             this.boardService.on('select:board', (e) => { this.onSelectBoard(e) });
+            this.boardService.on('fetch', (e) => { this.onFetch(e) });
 
             this.$el.on('click', '.toggle-bbs-button', (e) => { this.onClickToggleButton(e) });
             this.$el.on('click', '.reload-board-button', (e) => { this.onClickReloadButton(e) });
@@ -53,7 +54,7 @@ module Nicr.Controller {
         }
 
         private setThreadListSize(board:Model.Board) {
-            var footerHtml = JST['board-footer']({threads:undefined});
+            var footerHtml = JST['board-footer']({board:board});
             this.$el.find('.footer-center').html(footerHtml);
         }
 

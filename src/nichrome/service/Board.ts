@@ -26,6 +26,7 @@ module Nicr.Service {
                     thread.host = board.host;
                 });
                 board.threadSize = threads.length;
+                this.emit('fetch', { board:board, threads:threads });
                 this.emit('fetch:' + board.boardKey, threads);
                 return threads;
             });
@@ -47,6 +48,7 @@ module Nicr.Service {
             this.emit('add:board', {board:board});
             this.emit('select:board', {board:board});
             this.fetchWithCache(board);
+            this.saveActiveTabToStorage(board.id());
         }
 
         selectBoard(board:Model.Board) {

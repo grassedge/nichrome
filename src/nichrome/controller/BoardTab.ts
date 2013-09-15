@@ -28,6 +28,7 @@ module Nicr.Controller {
             this.boardService.on('select:board', (e) => { this.onSelectBoard(e) });
             this.boardService.on('close:board', (e) => { this.onCloseBoard(e) });
             this.boardService.on('reload:board:active', (e) => { this.onReloadActiveBoard(e) });
+            this.boardService.on('fetch', (e) => { this.onFetch(e) });
 
             this.$el.on('click', '.board-tab-item', (e) => { this.onClickBoardTabItem(e) });
             this.$el.on('dblclick', '.board-tab-item', (e) => { this.onDblclickBoardTabItem(e) });
@@ -91,6 +92,14 @@ module Nicr.Controller {
             var board = this.tabModels.at(index)
                      || this.tabModels.at(index - 1);
             if (board) this.selectBoard(board);
+        }
+
+        private onFetch(event) {
+            var board = event.board;
+            var threads = event.threads;
+            board = this.tabModels.get(board.id());
+            board.threadSize = threads.length;
+            this.boardService.saveTabToStorage(this.tabModels.getList());
         }
 
         private onAddBoard(event) {
