@@ -50,6 +50,7 @@ module Nicr.Controller {
         private onDownButton(event) {
             this.$el.find('.comment-list').scrollTop(10000000000); // irresponsible
         }
+
     }
 
 }

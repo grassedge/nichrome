@@ -114,6 +114,7 @@ module Nicr.Controller {
         }
 
         private onClickThreadTabItem(event) {
+            if ($(event.target).hasClass('close-button')) return;
             var $tabItem = $(event.currentTarget);
             var key = $tabItem.attr('id').match(/^thread-tab-(.+?)$/)[1];
             var thread = this.tabModels.get(key);

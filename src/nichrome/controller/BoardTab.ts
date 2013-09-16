@@ -134,6 +134,7 @@ module Nicr.Controller {
         }
 
         private onClickBoardTabItem(event) {
+            if ($(event.target).hasClass('close-button')) return;
             var $tabItem = $(event.currentTarget);
             var boardKey = $tabItem.attr('id').match(/^board-tab-(.+)$/)[1];
             var board = this.tabModels.get(boardKey);
