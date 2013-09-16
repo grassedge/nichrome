@@ -59,6 +59,7 @@ module Nicr.Controller {
 
         private onClose(event) {
             this.boardService.off('fetch:' + this.model.boardKey);
+            this.boardService.off('fetch:start:' + this.model.boardKey);
             this.boardService.off('close:board:' + this.model.boardKey);
             this.$el.remove();
         }
