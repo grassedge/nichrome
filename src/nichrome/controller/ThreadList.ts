@@ -10,6 +10,8 @@ module Nicr.Controller {
         private $el: JQuery;
         private model: Model.Board;
         private threads: IndexedList<Model.Thread>;
+        private sortKey: string;
+        private sortOrder: number;
 
         private boardService: Service.Board;
         private threadService: Service.Thread;
@@ -31,6 +33,7 @@ module Nicr.Controller {
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
+            this.$el.on('click', '.thread-list-header', (e) => { this.onClickThreadListHeader(e) });
         }
 
         private render() {
@@ -39,7 +42,13 @@ module Nicr.Controller {
         }
 
         private onFetch(event) {
-            this.threads = new IndexedList(event);
+            var threads = event;
+            var key = this.sortKey;
+            var sign = this.sortOrder;
+            if (this.sortKey && this.sortOrder) {
+                threads.sort((a,b) => (+a[key] > +b[key] ? -1 : 1) * sign);
+            }
+            this.threads = new IndexedList(threads);
             this.render();
             this.$el.find('.thread-list').removeClass('translucence');
         }
@@ -66,6 +75,17 @@ module Nicr.Controller {
             var query = $(event.target).find('input').val();
             this.$el.find('.thread-list-item').hide();
             this.$el.find('.thread-list-item:contains(' + query + ')').show();
+        }
+
+        private onClickThreadListHeader(event) {
+            var $header = $(event.target);
+            var key = $header.attr('data-sort-key');
+            if (!key) return;
+            var sign = (this.sortKey !== key) ? 1 : this.sortOrder * -1;
+            this.threads = this.threads.sort((a,b) => (+a[key] > +b[key] ? -1 : 1) * sign);
+            this.sortOrder = sign;
+            this.sortKey = key;
+            this.render();
         }
     }
 }

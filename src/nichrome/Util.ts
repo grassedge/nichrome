@@ -59,6 +59,11 @@ module Nicr {
             this.list.forEach(callback);
         }
 
+        sort(compare:(a:T, b:T) => number):IndexedList<T> {
+            var sorted = this.list.sort(compare);
+            return new IndexedList(sorted);
+        }
+
         // map(callback:any):IndexedList<T> {
         //     return new IndexedList(this.list.map(callback));
         // }
