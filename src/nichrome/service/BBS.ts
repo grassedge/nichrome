@@ -61,14 +61,14 @@ module Nicr.Service {
             }
         }
 
-        saveToStorage(data) {
+        private saveToStorage(data) {
             var categories = data.categories;
             var boards     = data.boards;
             this.storage.setItem('nicr:categories', JSON.stringify(categories));
             this.storage.setItem('nicr:boards', JSON.stringify(boards.getList()));
         }
 
-        retrieveFromStorage() {
+        private retrieveFromStorage() {
             var categories = this.storage.getItem('nicr:categories');
             var boards     = this.storage.getItem('nicr:boards');
             if (!categories) return;

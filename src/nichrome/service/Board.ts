@@ -72,7 +72,7 @@ module Nicr.Service {
             this.storage.setItem('nicr:board-' + boardKey, JSON.stringify(threads));
         }
 
-        retrieveFromStorage(board:Model.Board):Model.Thread[] {
+        private retrieveFromStorage(board:Model.Board):Model.Thread[] {
             var cache = this.storage.getItem('nicr:board-' + board.boardKey);
             if (!cache) return;
             return JSON.parse(cache).map((thread) => new Model.Thread(thread));
