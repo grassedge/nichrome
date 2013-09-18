@@ -39,11 +39,9 @@ module Nicr.Controller {
                 boardService: this.boardService,
                 threadService: this.threadService
             });
-
-            this.setup();
         }
 
-        private setup() {
+        setup() {
             var width = this.configService.getBoardContainerWidth();
             if (width) this.$el.width(width);
         }
