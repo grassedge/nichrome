@@ -27,8 +27,7 @@ Nicr.router.connect('index', function(match, location, guard) {
         threadService: threadService
     });
 
-    bbsService.fetchWithCache();
-
+    bbsController.setup();
     boardController.setup();
 
     idbManager.initialize().done((event) => {

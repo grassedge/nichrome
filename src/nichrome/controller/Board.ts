@@ -33,17 +33,17 @@ module Nicr.Controller {
             this.$el.on('click', '.reload-board-button', (e) => { this.onClickReloadButton(e) });
             this.$el.resizable({handles:'e'});
             this.$el.on('resizestop', (e, ui) => { this.onResizeStop(e, ui) });
+        }
+
+        setup() {
+            var width = this.configService.getBoardContainerWidth();
+            if (width) this.$el.width(width);
 
             new Controller.BoardTab({
                 $el: this.$el.find('.board-content'),
                 boardService: this.boardService,
                 threadService: this.threadService
             });
-        }
-
-        setup() {
-            var width = this.configService.getBoardContainerWidth();
-            if (width) this.$el.width(width);
         }
 
         private setBoardTitle(board:Model.Board) {

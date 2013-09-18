@@ -29,11 +29,11 @@ module Nicr.Controller {
             this.bbsService.on('fetch', (e) => this.onFetch(e));
             this.$el.on('click', '.category-name', (e) => this.onClickCategoryName(e));
             this.$el.on('click', '.board-list-item', (e) => this.onClickBoardListItem(e));
-
-            this.setup();
         }
 
-        private setup() {
+        setup() {
+            this.bbsService.fetchWithCache();
+
             var visibility = this.configService.getBBSContainerVisibility();
             this.$el.toggle(visibility);
         }
