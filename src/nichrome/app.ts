@@ -3,10 +3,12 @@
 /// <reference path="./controller/BBS.ts" />
 
 Nicr.router.connect('index', function(match, location, guard) {
+    var idbManager = new Nicr.IDBManager();
+
     var configService = new Nicr.Service.Config();
     var bbsService = new Nicr.Service.BBS();
     var boardService = new Nicr.Service.Board();
-    var threadService = new Nicr.Service.Thread();
+    var threadService = new Nicr.Service.Thread({idbManager:idbManager});
 
     var bbsController = new Nicr.Controller.BBS({
         $el: $('.bbs-container'),
@@ -24,9 +26,16 @@ Nicr.router.connect('index', function(match, location, guard) {
         $el: $('.thread-container'),
         threadService: threadService
     });
+
     bbsService.fetchWithCache();
-    // boardService.setupTab();
-    // threadService.setupTab();
+
+    // boardController.setup();
+    idbManager.initialize().done((event) => {
+        console.log('DB connect complete');
+        threadController.setup();
+    }).fail((event) => {
+        console.log('DB connect failed', event);
+    });
 });
 
 Nicr.router.connect(/^([^\/]+?)\/(\d+)$/, function(match, location, guard) {

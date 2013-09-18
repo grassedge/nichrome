@@ -26,13 +26,11 @@ module Nicr.Controller {
             this.$el.on('click', '.reload-thread-button', (e) => { this.onClickReloadThreadButton(e) });
             this.$el.on('click', '.thread-tab-item', (e) => { this.onClickThreadTabItem(e) });
             this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
-
-            this.setup();
             this.$el.find('.thread-tab').sortable();
             this.$el.on('sortstop', (e, ui) => { this.onSortStop(e, ui) });
         }
 
-        private setup() {
+        setup() {
             // take before openThread() because of override.
             var activeKey = this.threadService.retrieveActiveTabFromStorage();
 
