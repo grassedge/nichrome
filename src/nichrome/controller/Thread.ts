@@ -28,6 +28,8 @@ module Nicr.Controller {
             this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
 
             this.setup();
+            this.$el.find('.thread-tab').sortable();
+            this.$el.on('sortstop', (e, ui) => { this.onSortStop(e, ui) });
         }
 
         private setup() {
@@ -103,6 +105,16 @@ module Nicr.Controller {
             var thread = event.thread;
             var idx = this.deleteThread(thread);
             this.selectThreadByIndex(idx);
+        }
+
+        private onSortStop(event, ui) {
+            var $item = ui.item;
+            var key = $item.attr('id').match(/^thread-tab-(.+)$/)[1];
+            var thread = this.tabModels.get(key);
+            var idx = this.tabModels.indexOf(thread);
+            this.tabModels.splice(idx, 1);
+            this.tabModels.splice($item.index(), 0, thread);
+            this.threadService.saveTabToStorage(this.tabModels.getList());
         }
 
         private onClickTrashButton(event) {
