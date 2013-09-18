@@ -60,7 +60,7 @@ module Nicr.Controller {
             this.$el.append(threadListHtml);
             new Controller.ThreadList({
                 $el:this.$el.find('#thread-list-' + board.boardKey),
-                model:board,
+                board:board,
                 boardService:this.boardService,
                 threadService:this.threadService
             });

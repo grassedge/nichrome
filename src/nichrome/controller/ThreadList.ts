@@ -8,7 +8,7 @@ module Nicr.Controller {
 
     export class ThreadList {
         private $el: JQuery;
-        private model: Model.Board;
+        private board: Model.Board;
         private threads: IndexedList<Model.Thread>;
         private sortKey: string;
         private sortOrder: number;
@@ -18,18 +18,18 @@ module Nicr.Controller {
 
         constructor(args:{
             $el:JQuery;
-            model:Model.Board;
+            board:Model.Board;
             boardService:Service.Board;
             threadService:Service.Thread;
         }) {
             this.$el = args.$el;
-            this.model = args.model;
+            this.board = args.board;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
 
-            this.boardService.on('fetch:' + this.model.id(), (e) => { this.onFetch(e); });
-            this.boardService.on('fetch:start:' + this.model.id(), (e) => { this.onFetchStart(e); });
-            this.boardService.on('close:board:' + this.model.id(), (e) => { this.onClose(e); });
+            this.boardService.on('fetch:' + this.board.id(), (e) => { this.onFetch(e); });
+            this.boardService.on('fetch:start:' + this.board.id(), (e) => { this.onFetchStart(e); });
+            this.boardService.on('close:board:' + this.board.id(), (e) => { this.onClose(e); });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
@@ -58,16 +58,16 @@ module Nicr.Controller {
         }
 
         private onClose(event) {
-            this.boardService.off('fetch:' + this.model.boardKey);
-            this.boardService.off('fetch:start:' + this.model.boardKey);
-            this.boardService.off('close:board:' + this.model.boardKey);
+            this.boardService.off('fetch:' + this.board.id());
+            this.boardService.off('fetch:start:' + this.board.id());
+            this.boardService.off('close:board:' + this.board.id());
             this.$el.remove();
         }
 
         private onClickThreadListItem(event) {
             var $threadListItem = $(event.currentTarget);
             var threadKey = $threadListItem.attr('data-thread-key');
-            var key = this.model.boardKey + '-' + threadKey;
+            var key = this.board.id() + '-' + threadKey;
             this.threadService.openThread(this.threads.get(key));
         }
 
