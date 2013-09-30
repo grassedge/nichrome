@@ -53,12 +53,40 @@ module Nicr {
         get(storeName:string, key:any, opts:any = {}):JQueryPromise<any> {
             var txn = this.idb.transaction(storeName, 'readonly');
             var store = txn.objectStore(storeName);
-            var req = store.get(key);
+            var idx = opts.indexName ? store.index(opts.indexName) : undefined;
+            var req = idx ? idx.get(key) : store.get(key);
 
             var d = $.Deferred();
             req.onsuccess = function() {
                 if (opts.success) opts.success(this);
                 d.resolve(this.result);
+            };
+            req.onerror = function(e) {
+                if (opts.error) opts.error(e);
+                d.reject(e);
+            };
+            return d.promise();
+        }
+
+        search(storeName:string, key, opts:any = {}) {
+            var txn = this.idb.transaction(storeName, 'readonly');
+            var store = txn.objectStore(storeName);
+            var idx = opts.indexName ? store.index(opts.indexName) : undefined;
+
+            var range = <IDBKeyRange>((<any>IDBKeyRange).only(key));
+            var req = idx ? idx.openCursor(range) : store.openCursor(range);
+
+            var d = $.Deferred();
+            var resultArray = [];
+            req.onsuccess = function() {
+                var cursor = this.result;
+                if (cursor) {
+                    resultArray.push(cursor.value);
+                    cursor.continue(); // search next;
+                } else {
+                    if (opts.success) opts.success(this);
+                    d.resolve(resultArray)
+                }
             };
             req.onerror = function(e) {
                 if (opts.error) opts.error(e);
