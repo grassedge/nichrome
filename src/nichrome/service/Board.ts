@@ -56,10 +56,6 @@ module Nicr.Service {
             this.saveActiveTabToStorage(board.id());
         }
 
-        reloadActiveBoard() {
-            this.emit('reload:board:active', {});
-        }
-
         closeBoard(board:Model.Board) {
             this.emit('close:board', {board:board});
             this.emit('close:board:' + board.boardKey, {board:board});
