@@ -13,41 +13,6 @@ module Nicr.Service {
             this.idbManager = args.idbManager;
         }
 
-        fetch(thread:Model.Thread) {
-            var url = thread.datUrl();
-            return $.ajax(url, {
-                mimeType: 'text/plain; charset=shift_jis'
-            }).then((datText:string, status:string, $xhr:JQueryXHR) => {
-                console.log($xhr.status);
-                var comments = Model.Comment.fromDatText(datText);
-                thread.commentCount = comments.length;
-                // include datText for cache;
-                var data = {thread:thread, comments:comments, datText:datText};
-                this.emit('fetch:' + thread.id(), data);
-                return data;
-            });
-        }
-
-        private fetchAndCache(thread:Model.Thread) {
-            return this.fetch(thread).then((data) => {
-                this.saveToIDB(data.thread, data.datText);
-            });
-        }
-
-        fetchWithCache(thread:Model.Thread, args:any = {}) {
-
-            if (args.force) { return this.fetchAndCache(thread); }
-
-            return this.retrieveFromIDB(thread).then((comments:Model.Comment[]) => {
-                if (comments) {
-                    var data = {thread:thread, comments:comments};
-                    this.emit('fetch:' + thread.id(), data);
-                    return data;
-                }
-                return this.fetchAndCache(thread);
-            });
-        }
-
         openThread(thread:Model.Thread) {
             this.emit('open:thread', {thread:thread});
             return this.fetchWithCache(thread);

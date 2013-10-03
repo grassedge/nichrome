@@ -9,18 +9,21 @@ module Nicr.Controller {
         private comments: IndexedList<Model.Comment>;
 
         private threadService: Service.Thread;
+        private commentService: Service.Comment;
 
         constructor(args:{
             $el:JQuery;
             thread:Model.Thread;
             threadService:Service.Thread;
+            commentService:Service.Comment;
         }) {
             this.$el = args.$el;
             this.thread = args.thread;
             this.threadService = args.threadService;
+            this.commentService = args.commentService;
 
-            this.threadService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
             this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
+            this.commentService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
 
             this.$el.on('click', '.comment-list-up-button', (e) => { this.onUpButton(e) });
             this.$el.on('click', '.comment-list-down-button', (e) => { this.onDownButton(e) });

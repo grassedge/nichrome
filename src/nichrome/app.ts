@@ -9,6 +9,7 @@ Nicr.router.connect('index', function(match, location, guard) {
     var bbsService = new Nicr.Service.BBS();
     var boardService = new Nicr.Service.Board();
     var threadService = new Nicr.Service.Thread({idbManager:idbManager});
+    var commentService = new Nicr.Service.Comment({idbManager:idbManager});
 
     var bbsController = new Nicr.Controller.BBS({
         $el: $('.bbs-container'),
@@ -24,7 +25,8 @@ Nicr.router.connect('index', function(match, location, guard) {
     });
     var threadController = new Nicr.Controller.Thread({
         $el: $('.thread-container'),
-        threadService: threadService
+        threadService: threadService,
+        commentService: commentService
     });
 
     bbsController.setup();

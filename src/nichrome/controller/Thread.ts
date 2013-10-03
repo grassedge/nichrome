@@ -10,17 +10,21 @@ module Nicr.Controller {
         private activeThread: Model.Thread;
 
         private threadService: Service.Thread;
+        private commentService: Service.Comment;
 
         constructor(args:{
             $el:JQuery;
             threadService:Service.Thread;
+            commentService:Service.Comment;
         }) {
             this.$el = args.$el;
-            this.threadService = args.threadService;
+            this.threadService  = args.threadService;
+            this.commentService = args.commentService;
             this.tabModels = new IndexedList();
 
             this.threadService.on('open:thread', (e) => { this.onOpenThread(e) });
             this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
+            this.commentService.on('fetch', (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.trash-button', (e) => { this.onClickTrashButton(e) });
             this.$el.on('click', '.reload-thread-button', (e) => { this.onClickReloadThreadButton(e) });
@@ -53,7 +57,8 @@ module Nicr.Controller {
             new CommentList({
                 $el:this.$el.find('#thread-' + thread.id()),
                 thread:thread,
-                threadService:this.threadService
+                threadService:this.threadService,
+                commentService:this.commentService,
             });
             this.threadService.saveTabToStorage(this.tabModels.getList());
         }
@@ -97,12 +102,17 @@ module Nicr.Controller {
             var thread = event.thread;
             this.addThread(thread);
             this.selectThread(thread);
+            this.commentService.fetchWithCache(thread);
         }
 
         private onCloseThread(event) {
             var thread = event.thread;
             var idx = this.deleteThread(thread);
             this.selectThreadByIndex(idx);
+        }
+
+        private onFetchThread(event) {
+            this.setThreadTitle(this.activeThread);
         }
 
         private onSortStop(event, ui) {
@@ -120,7 +130,7 @@ module Nicr.Controller {
         }
 
         private onClickReloadThreadButton(event) {
-            this.threadService.fetchWithCache(this.activeThread, {force:true});
+            this.commentService.fetchWithCache(this.activeThread, {force:true});
         }
 
         private onClickThreadTabItem(event) {

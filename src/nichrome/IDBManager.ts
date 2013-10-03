@@ -29,17 +29,22 @@ module Nicr {
                 this.idb = <IDBDatabase>target.result;
 
                 var oldVersion = <any>event.oldVersion;
-                // var newVersion = <any>event.newVersion;
+                var newVersion = <any>event.newVersion;
 
                 if (oldVersion === '' || oldVersion === 0){
                     var store:IDBObjectStore = this.idb.createObjectStore('Thread', {
                         keyPath: 'id',
                         autoIncrement: false
                     });
-
                     var idx:IDBIndex = store.createIndex('boardKey', 'boardKey', {
                         unique: false,
                     });
+
+                    var datStore = this.idb.createObjectStore('Dat', {
+                        keyPath: 'id',
+                        autoIncrement: false
+                    });
+
                 } else {
                     // code for version up.
                 }
@@ -73,18 +78,18 @@ module Nicr {
             var store = txn.objectStore(storeName);
             var idx = opts.indexName ? store.index(opts.indexName) : undefined;
 
-            var range = <IDBKeyRange>((<any>IDBKeyRange).only(key));
+            var range = key ? <IDBKeyRange>((<any>IDBKeyRange).only(key)) : null;
             var req = idx ? idx.openCursor(range) : store.openCursor(range);
-
             var d = $.Deferred();
             var resultArray = [];
             req.onsuccess = function() {
                 var cursor = this.result;
                 if (cursor) {
+                    if (opts.success) opts.success(cursor);
                     resultArray.push(cursor.value);
                     cursor.continue(); // search next;
                 } else {
-                    if (opts.success) opts.success(this);
+                    if (opts.end) opts.end(cursor);
                     d.resolve(resultArray)
                 }
             };
