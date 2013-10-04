@@ -15,24 +15,28 @@ module Nicr.Controller {
         private configService: Service.Config;
         private boardService: Service.Board;
         private threadService: Service.Thread;
+        // don't use in this Controller. pass it to Controller.ThreadList
+        private commentService: Service.Comment;
 
         constructor(args:{
             $el:JQuery;
             configService: Service.Config;
             boardService:Service.Board;
             threadService:Service.Thread;
+            commentService:Service.Comment;
         }) {
             this.$el = args.$el;
             this.configService = args.configService;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
+            this.commentService = args.commentService;
 
             this.tabModels = new IndexedList();
 
             this.boardService.on('add:board', (e) => { this.onAddBoard(e) });
             this.boardService.on('select:board', (e) => { this.onSelectBoard(e) });
             this.boardService.on('close:board', (e) => { this.onCloseBoard(e) });
-            this.boardService.on('fetch', (e) => { this.onFetch(e) });
+            this.threadService.on('fetch', (e) => { this.onFetch(e) });
 
             this.$el.on('click', '.toggle-bbs-button', (e) => { this.onClickToggleButton(e) });
             this.$el.on('click', '.reload-board-button', (e) => { this.onClickReloadButton(e) });
@@ -83,12 +87,14 @@ module Nicr.Controller {
                 $el:this.$el.find('#thread-list-' + board.boardKey),
                 board:board,
                 boardService:this.boardService,
-                threadService:this.threadService
+                threadService:this.threadService,
+                commentService:this.commentService
             });
             this.boardService.saveTabToStorage(this.tabModels.getList());
         }
 
         private deleteBoard(board:Model.Board):number {
+            // indexOf() check not equivalence but identification.
             var having = this.tabModels.get(board.boardKey);
             if (!having) return;
             var idx = this.tabModels.indexOf(having);
@@ -130,6 +136,7 @@ module Nicr.Controller {
         private onAddBoard(event) {
             var board = event.board;
             this.addBoard(board);
+            this.threadService.fetchWithCache(board);
         }
 
         private onSelectBoard(event) {
@@ -167,7 +174,7 @@ module Nicr.Controller {
 
         private onClickReloadButton(event) {
             var board = this.activeBoard;
-            this.boardService.fetchWithCache(board, {force:true});
+            this.threadService.fetchWithCache(board, {force:true});
         }
 
         private onClickBoardTabItem(event) {

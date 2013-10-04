@@ -89,7 +89,7 @@ module Nicr.Controller {
 
         private selectThreadByIndex(index:number) {
             var thread = this.tabModels.at(index)
-                     || this.tabModels.at(index - 1);
+                      || this.tabModels.at(index - 1);
             if (thread) this.selectThread(thread);
         }
 

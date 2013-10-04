@@ -58,9 +58,10 @@ module Nicr.Controller {
         }
 
         private onClose(event) {
-            this.boardService.off('fetch:' + this.board.id());
-            this.boardService.off('fetch:start:' + this.board.id());
+            this.threadService.off('fetch:' + this.board.id());
+            this.threadService.off('fetch:start:' + this.board.id());
             this.boardService.off('close:board:' + this.board.id());
+            this.commentService.off('fetch');
             this.$el.remove();
         }
 

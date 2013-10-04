@@ -22,6 +22,7 @@ Nicr.router.connect('index', function(match, location, guard) {
         configService: configService,
         boardService: boardService,
         threadService: threadService,
+        commentService: commentService
     });
     var threadController = new Nicr.Controller.Thread({
         $el: $('.thread-container'),
