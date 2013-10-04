@@ -26,20 +26,29 @@ module Nicr.Service {
                     thread.host = board.host;
                 });
                 board.threadSize = threads.length;
-                this.emit('fetch', { board:board, threads:threads });
-                this.emit('fetch:' + board.boardKey, threads);
-                return threads;
+                var data = { board:board, threads:threads };
+                this.emit('fetch', data);
+                this.emit('fetch:' + board.boardKey, data);
+                return data;
+            });
+        }
+
+        private fetchAndCache(board:Model.Board) {
+            return this.fetch(board).then((data) => {
+                this.saveToIDB(data.thread, data.datText);
+                return data;
             });
         }
 
         fetchWithCache(board:Model.Board, args:any = {}) {
             var threads = this.retrieveFromStorage(board);
             if (!args.force && threads) {
-                this.emit('fetch:' + board.boardKey, threads);
-                return $.Deferred().resolve(threads).promise();
+                var data = { board:board, threads:threads };
+                this.emit('fetch:' + board.boardKey, data);
+                return $.Deferred().resolve(data).promise();
             } else {
-                return this.fetch(board).then((threads) => {
-                    this.saveToStorage(board.boardKey, threads);
+                return this.fetch(board).then((data) => {
+                    this.saveToStorage(data.board.boardKey, data.threads);
                 });
             }
         }
