@@ -35,21 +35,23 @@ module Nicr.Service {
 
         private fetchAndCache(board:Model.Board) {
             return this.fetch(board).then((data) => {
-                this.saveToIDB(data.thread, data.datText);
+                this.saveToStorage(data.board.boardKey, data.threads);
                 return data;
             });
         }
 
         fetchWithCache(board:Model.Board, args:any = {}) {
+
+            if (args.force) { return this.fetchAndCache(board); }
+
             var threads = this.retrieveFromStorage(board);
-            if (!args.force && threads) {
+            if (threads) {
                 var data = { board:board, threads:threads };
+                this.emit('fetch', data);
                 this.emit('fetch:' + board.boardKey, data);
                 return $.Deferred().resolve(data).promise();
             } else {
-                return this.fetch(board).then((data) => {
-                    this.saveToStorage(data.board.boardKey, data.threads);
-                });
+                return this.fetchAndCache(board);
             }
         }
 
