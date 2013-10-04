@@ -64,6 +64,13 @@ module Nicr.Controller {
 
             var board = this.tabModels.get(activeKey);
             if (board) this.boardService.selectBoard(board);
+
+            var menuHtml = JST['board-popup-menu']();
+            this.$el.prepend(menuHtml);
+            new BoardMenu({
+                $el: this.$el.find('.popup-menu'),
+                threadService: this.threadService
+            });
         }
 
         private setBoardTitle(board:Model.Board) {
@@ -196,6 +203,33 @@ module Nicr.Controller {
         private onClickMenuButton(event) {
             console.log('open menu');
             this.$el.find('.popup-menu').show();
+        }
+    }
+
+    class BoardMenu {
+        private $el: JQuery;
+
+        private threadService: Service.Thread;
+
+        constructor(args:{
+            $el:JQuery;
+            threadService:Service.Thread;
+        }) {
+            this.$el = args.$el;
+            this.threadService = args.threadService;
+
+            this.$el.on('click', '.all-log-list', (e) => { this.onClickAllLogList(e) });
+            $(document).on('click', (e) => { this.onClickBody(e) });
+        }
+
+        onClickAllLogList(event) {
+            this.threadService.openAllLogList();
+        }
+
+        onClickBody(event) {
+            var $target = $(event.target);
+            if ($target.hasClass('menu-button')) return;
+            this.$el.hide();
         }
     }
 
