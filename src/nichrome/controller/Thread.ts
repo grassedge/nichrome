@@ -107,8 +107,9 @@ module Nicr.Controller {
 
         private onCloseThread(event) {
             var thread = event.thread;
+            var reselect = thread.equals(this.activeThread);
             var idx = this.deleteThread(thread);
-            this.selectThreadByIndex(idx);
+            if (reselect) this.selectThreadByIndex(idx);
         }
 
         private onFetchThread(event) {

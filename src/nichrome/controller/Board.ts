@@ -146,8 +146,9 @@ module Nicr.Controller {
 
         private onCloseBoard(event) {
             var board = event.board;
+            var reselect = board.equals(this.activeBoard);
             var idx = this.deleteBoard(board);
-            this.selectBoardByIndex(idx);
+            if (reselect) this.selectBoardByIndex(idx);
         }
 
         private onSortStop(event, ui) {
