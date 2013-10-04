@@ -11,7 +11,13 @@ module Nicr.Model {
         momentum:number;
 
         constructor(args) {
-            for (var key in args) this[key] = args[key];
+            this.boardKey     = args.boardKey;
+            this.threadKey    = args.threadKey;
+            this.title        = args.title;
+            this.host         = args.host;
+            this.commentCount = args.commentCount;
+            this.number       = args.number;
+
             this.momentum = this.calcMomentum();
         }
 
