@@ -36,6 +36,7 @@ module Nicr.Service {
         private fetchAndCache(board:Model.Board) {
             return this.fetch(board).then((data) => {
                 this.saveToStorage(data.board.boardKey, data.threads);
+                this.saveThreadsToIDB(data.board, data.threads);
                 return data;
             });
         }
@@ -68,14 +69,84 @@ module Nicr.Service {
 
         // ---- cache with indexedDB ----
 
-        private saveToIDB(thread:Model.Thread, datText:string) {
+        private saveThreadsToIDB(board:Model.Board, threads:Model.Thread[]) {
+            this.idbManager.search(
+                'Thread', [board.boardKey, 1], { indexName:'active' }
+            ).then((data) => {
+                var stored:IndexedList<Model.Thread> = new IndexedList(
+                    data.map((thread) => new Model.Thread(thread))
+                );
+
+                console.log(stored);
+
+                var createList = [];
+                var updateList = [];
+                threads.forEach((thread) => {
+                    var storedThread = stored.get(thread.id());
+                    if (storedThread) {
+                        updateList.push(thread);
+                        var idx = stored.indexOf(storedThread);
+                        stored.splice(idx, 1);
+                    } else {
+                        createList.push(thread);
+                    }
+                })
+
+                var expireList = [];
+                var deleteList = [];
+                stored.getList().forEach((thread) => {
+                    if (thread.datSize) expireList.push(thread)
+                    else                deleteList.push(thread)
+                });
+
+                console.log(createList);
+                console.log(updateList);
+                console.log(expireList);
+                console.log(deleteList);
+
+                createList.map((thread) => {
+                    return this.idbManager.put(
+                        'Thread',
+                        {
+                            id: [thread.boardKey, thread.threadKey],
+                            active: [thread.boardKey, 1],
+                            threadKey: thread.threadKey,
+                            boardKey: thread.boardKey,
+                            title: thread.title,
+                            number: thread.number,
+                        }
+                    ).fail((e) => {
+                        console.log('failed to save datText');
+                        console.log(e);
+                    });
+                });
+                // expireList.map((thread) => {
+                //     this.idbManager.search(
+                //         'Thread', [thread.boardKey, thread.threadKey],
+                //         {
+                //             success: () => {
+                //             }
+                //         }
+                //     )
+                // });
+                deleteList.map((thread) => {
+                    return this.idbManager.delete(
+                        'Thread', [thread.boardKey, thread.threadKey]
+                    );
+                });
+
+                return stored;
+            });
+
+            var thread = threads[0];
             return this.idbManager.put(
                 'Thread',
                 {
                     id: [thread.boardKey, thread.threadKey],
+                    active: [thread.boardKey, 1],
                     threadKey: thread.threadKey,
                     boardKey: thread.boardKey,
-                    datText: datText
+                    title: thread.title,
                 }
             ).fail((e) => {
                 console.log('failed to save datText');

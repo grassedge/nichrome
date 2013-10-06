@@ -9,6 +9,7 @@ module Nicr.Model {
         commentCount:number;
         number:number;
         momentum:number;
+        datSize:number;
 
         constructor(args) {
             this.boardKey     = args.boardKey;
@@ -16,6 +17,7 @@ module Nicr.Model {
             this.title        = args.title;
             this.host         = args.host;
             this.commentCount = args.commentCount;
+            this.datSize      = args.datSize;
             this.number       = args.number;
 
             this.momentum = this.calcMomentum();

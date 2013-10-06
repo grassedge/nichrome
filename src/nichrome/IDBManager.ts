@@ -36,9 +36,8 @@ module Nicr {
                         keyPath: 'id',
                         autoIncrement: false
                     });
-                    var idx:IDBIndex = store.createIndex('boardKey', 'boardKey', {
-                        unique: false,
-                    });
+                    store.createIndex('boardKey', 'boardKey', { unique: false });
+                    store.createIndex('active', 'active', { unique: false });
 
                     var datStore = this.idb.createObjectStore('Dat', {
                         keyPath: 'id',
@@ -104,6 +103,23 @@ module Nicr {
             var txn = this.idb.transaction(storeName, 'readwrite');
             var store = txn.objectStore(storeName);
             var req = store.put(data);
+
+            var d = $.Deferred();
+            req.onsuccess = (e) => {
+                if (opts.success) opts.success();
+                d.resolve(e);
+            };
+            req.onerror = (e) => {
+                if (opts.error) opts.error();
+                d.reject(e);
+            };
+            return d.promise();
+        }
+
+        delete(storeName:string, key, opts:any = {}):JQueryPromise<any> {
+            var txn = this.idb.transaction(storeName, 'readwrite');
+            var store = txn.objectStore(storeName);
+            var req = store.delete(key);
 
             var d = $.Deferred();
             req.onsuccess = (e) => {

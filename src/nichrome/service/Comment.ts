@@ -38,6 +38,7 @@ module Nicr.Service {
         private fetchAndCache(thread:Model.Thread) {
             return this.fetch(thread).then((data:any) => { // ? why need 'any'
                 if (!data.isExpired) this.saveToIDB(data.thread, data.datText);
+                return data;
             });
         }
 
