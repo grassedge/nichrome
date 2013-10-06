@@ -15,21 +15,25 @@ module Nicr.Controller {
 
         private boardService: Service.Board;
         private threadService: Service.Thread;
+        private commentService: Service.Comment;
 
         constructor(args:{
             $el:JQuery;
             board:Model.Board;
             boardService:Service.Board;
             threadService:Service.Thread;
+            commentService:Service.Comment;
         }) {
             this.$el = args.$el;
             this.board = args.board;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
+            this.commentService = args.commentService;
 
-            this.boardService.on('fetch:' + this.board.id(), (e) => { this.onFetch(e); });
-            this.boardService.on('fetch:start:' + this.board.id(), (e) => { this.onFetchStart(e); });
+            this.threadService.on('fetch:' + this.board.id(), (e) => { this.onFetch(e); });
+            this.threadService.on('fetch:start:' + this.board.id(), (e) => { this.onFetchStart(e); });
             this.boardService.on('close:board:' + this.board.id(), (e) => { this.onClose(e); });
+            this.commentService.on('fetch', (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
