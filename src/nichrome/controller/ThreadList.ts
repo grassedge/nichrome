@@ -46,7 +46,7 @@ module Nicr.Controller {
         }
 
         private onFetch(event) {
-            var threads = event;
+            var threads = event.threads;
             var key = this.sortKey;
             var sign = this.sortOrder;
             if (this.sortKey && this.sortOrder) {
