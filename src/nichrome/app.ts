@@ -31,10 +31,10 @@ Nicr.router.connect('index', function(match, location, guard) {
     });
 
     bbsController.setup();
-    boardController.setup();
 
     idbManager.initialize().done((event) => {
         console.log('DB connect complete');
+        boardController.setup();
         threadController.setup();
     }).fail((event) => {
         console.log('DB connect failed', event);

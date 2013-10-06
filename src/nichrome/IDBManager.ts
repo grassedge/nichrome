@@ -73,7 +73,7 @@ module Nicr {
         }
 
         search(storeName:string, key, opts:any = {}) {
-            var txn = this.idb.transaction(storeName, 'readonly');
+            var txn = this.idb.transaction(storeName, opts.update ? 'readwrite' : 'readonly');
             var store = txn.objectStore(storeName);
             var idx = opts.indexName ? store.index(opts.indexName) : undefined;
 

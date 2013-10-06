@@ -35,7 +35,6 @@ module Nicr.Service {
 
         private fetchAndCache(board:Model.Board) {
             return this.fetch(board).then((data) => {
-                this.saveToStorage(data.board.boardKey, data.threads);
                 this.saveThreadsToIDB(data.board, data.threads);
                 return data;
             });
@@ -45,26 +44,24 @@ module Nicr.Service {
 
             if (args.force) { return this.fetchAndCache(board); }
 
-            var threads = this.retrieveFromStorage(board);
-            if (threads) {
-                var data = { board:board, threads:threads };
-                this.emit('fetch', data);
-                this.emit('fetch:' + board.boardKey, data);
-                return $.Deferred().resolve(data).promise();
-            } else {
+            return this.retrieveFromIDB(board).then((threads:Model.Thread[]) => {
+                if (!!threads.length) {
+                    var data = { board:board, threads:threads };
+                    this.emit('fetch', data);
+                    this.emit('fetch:' + board.boardKey, data);
+                    return data;
+                }
                 return this.fetchAndCache(board);
-            }
+            });
         }
 
         openThread(thread:Model.Thread) {
             this.emit('open:thread', {thread:thread});
-            return this.fetchWithCache(thread);
         }
 
         closeThread(thread:Model.Thread) {
             this.emit('close:thread', {thread:thread});
             this.emit('close:thread:' + thread.id(), {thread:thread});
-            // this.removeFromCache();
         }
 
         // ---- cache with indexedDB ----
@@ -76,8 +73,6 @@ module Nicr.Service {
                 var stored:IndexedList<Model.Thread> = new IndexedList(
                     data.map((thread) => new Model.Thread(thread))
                 );
-
-                console.log(stored);
 
                 var createList = [];
                 var updateList = [];
@@ -99,11 +94,6 @@ module Nicr.Service {
                     else                deleteList.push(thread)
                 });
 
-                console.log(createList);
-                console.log(updateList);
-                console.log(expireList);
-                console.log(deleteList);
-
                 createList.map((thread) => {
                     return this.idbManager.put(
                         'Thread',
@@ -112,7 +102,9 @@ module Nicr.Service {
                             active: [thread.boardKey, 1],
                             threadKey: thread.threadKey,
                             boardKey: thread.boardKey,
+                            host: thread.host,
                             title: thread.title,
+                            commentCount: thread.commentCount,
                             number: thread.number,
                         }
                     ).fail((e) => {
@@ -120,15 +112,34 @@ module Nicr.Service {
                         console.log(e);
                     });
                 });
-                // expireList.map((thread) => {
-                //     this.idbManager.search(
-                //         'Thread', [thread.boardKey, thread.threadKey],
-                //         {
-                //             success: () => {
-                //             }
-                //         }
-                //     )
-                // });
+                updateList.map((thread) => {
+                    return this.idbManager.search(
+                        'Thread', [thread.boardKey, thread.threadKey],
+                        {
+                            success: (cursor) => {
+                                var original = cursor.value;
+                                original.number = thread.number;
+                                original.commentCount = thread.commentCount;
+                                cursor.update(original);
+                            },
+                            update: true,
+                        }
+                    );
+                });
+                expireList.map((thread) => {
+                    this.idbManager.search(
+                        'Thread', [thread.boardKey, thread.threadKey],
+                        {
+                            success: (cursor) => {
+                                var original = cursor.value;
+                                original.active = [thread.boardKey, 0];
+                                delete original.number;
+                                cursor.update(original);
+                            },
+                            update: true,
+                        }
+                    )
+                });
                 deleteList.map((thread) => {
                     return this.idbManager.delete(
                         'Thread', [thread.boardKey, thread.threadKey]
@@ -137,41 +148,19 @@ module Nicr.Service {
 
                 return stored;
             });
-
-            var thread = threads[0];
-            return this.idbManager.put(
-                'Thread',
-                {
-                    id: [thread.boardKey, thread.threadKey],
-                    active: [thread.boardKey, 1],
-                    threadKey: thread.threadKey,
-                    boardKey: thread.boardKey,
-                    title: thread.title,
-                }
-            ).fail((e) => {
-                console.log('failed to save datText');
-            });
         }
 
-        private retrieveFromIDB(thread:Model.Thread):JQueryPromise<any> {
-            return this.idbManager.get(
-                'Thread', [thread.boardKey, thread.threadKey]
-            ).then((result) => {
-                return result ? Model.Comment.fromDatText(result.datText) : undefined;
+        private retrieveFromIDB(board:Model.Board):JQueryPromise<any> {
+            return this.idbManager.search(
+                'Thread', [board.boardKey, 1], { indexName:'active' }
+            ).then((threads) => {
+                // XXX refine when save 'sort key and order' to config.
+                threads = threads.sort((a,b) => +(a.number) > +(b.number) ? 1 : -1);
+                return threads.map((thread) => new Model.Thread(thread));
             });
         }
 
         // ---- cache with local storage ----
-
-        private saveToStorage(boardKey:string, threads:Model.Thread[]) {
-            this.storage.setItem('nicr:board-' + boardKey, JSON.stringify(threads));
-        }
-
-        private retrieveFromStorage(board:Model.Board):Model.Thread[] {
-            var cache = this.storage.getItem('nicr:board-' + board.boardKey);
-            if (!cache) return;
-            return JSON.parse(cache).map((thread) => new Model.Thread(thread));
-        }
 
         saveActiveTabToStorage(key:string) {
             this.storage.setItem('nicr:thread-tab-active', key);
