@@ -69,6 +69,7 @@ module Nicr.Controller {
             this.$el.prepend(menuHtml);
             new BoardMenu({
                 $el: this.$el.find('.popup-menu'),
+                boardService: this.boardService,
                 threadService: this.threadService
             });
         }
@@ -209,13 +210,16 @@ module Nicr.Controller {
     class BoardMenu {
         private $el: JQuery;
 
+        private boardService: Service.Board;
         private threadService: Service.Thread;
 
         constructor(args:{
             $el:JQuery;
+            boardService:Service.Board;
             threadService:Service.Thread;
         }) {
             this.$el = args.$el;
+            this.boardService = args.boardService;
             this.threadService = args.threadService;
 
             this.$el.on('click', '.all-log-list', (e) => { this.onClickAllLogList(e) });
@@ -223,7 +227,7 @@ module Nicr.Controller {
         }
 
         onClickAllLogList(event) {
-            this.threadService.openAllLogList();
+            this.boardService.openBoard(new Model.Board({boardKey:'log', title:'log'}));
         }
 
         onClickBody(event) {
