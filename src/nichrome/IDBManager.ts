@@ -38,6 +38,7 @@ module Nicr {
                     });
                     store.createIndex('boardKey', 'boardKey', { unique: false });
                     store.createIndex('active', 'active', { unique: false });
+                    store.createIndex('datSize', 'datSize', { unique: false });
 
                     var datStore = this.idb.createObjectStore('Dat', {
                         keyPath: 'id',
@@ -77,7 +78,10 @@ module Nicr {
             var store = txn.objectStore(storeName);
             var idx = opts.indexName ? store.index(opts.indexName) : undefined;
 
-            var range = key ? <IDBKeyRange>((<any>IDBKeyRange).only(key)) : null;
+            var range = !key              ? null
+                : opts.condition === 'gt' ? <IDBKeyRange>((<any>IDBKeyRange).lowerBound(key))
+                                          : <IDBKeyRange>((<any>IDBKeyRange).only(key));
+
             var req = idx ? idx.openCursor(range) : store.openCursor(range);
             var d = $.Deferred();
             var resultArray = [];
@@ -97,6 +101,18 @@ module Nicr {
                 d.reject(e);
             };
             return d.promise();
+        }
+
+        update(storeName:string, key, updateValues, opts:any = {}) {
+            opts.update = true;
+            opts.success = (cursor) => {
+                var original = cursor.value;
+                for (var key in updateValues) {
+                    original[key] = updateValues[key];
+                }
+                cursor.update(original);
+            };
+            return this.search(storeName, key, opts);
         }
 
         put(storeName:string, data:any, opts:any = {}):JQueryPromise<any> {
