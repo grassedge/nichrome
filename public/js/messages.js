@@ -3,4 +3,5 @@ var msg = {
     'label.momentum' : '¨‚¢',
     'label.resSize' : 'ƒŒƒX',
     'label.all.log.list' : 'æ“¾Ï‚İƒƒOˆê——',
+    'label.delete.log' : '‚±‚ÌƒƒO‚ğíœ‚·‚é',
 };

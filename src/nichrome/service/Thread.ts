@@ -64,6 +64,38 @@ module Nicr.Service {
             });
         }
 
+        updateThreadDatSize(thread:Model.Thread) {
+            return this.idbManager.update(
+                'Thread', [thread.boardKey, thread.threadKey],
+                {
+                    datSize : thread.commentCount,
+                    commentCount : thread.commentCount
+                }
+            );
+        }
+
+        deleteThreadLog(thread:Model.Thread) {
+            return this.idbManager.search(
+                'Thread', [thread.boardKey, thread.threadKey],
+                {
+                    success: (cursor) => {
+                        var thread = cursor.value;
+                        if (thread.active[1]) {
+                            delete thread.datSize;
+                            cursor.update(thread);
+                        } else {
+                            cursor.delete();
+                        }
+                    },
+                    update: true
+                }
+            ).then(() => {
+                this.emit('delete:log', {thread:thread});
+                this.emit('close:thread', {thread:thread});
+                this.emit('close:thread:' + thread.id(), {thread:thread});
+            });
+        }
+
         openThread(thread:Model.Thread) {
             this.emit('open:thread', {thread:thread});
         }

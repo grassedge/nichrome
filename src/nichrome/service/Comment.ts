@@ -57,6 +57,14 @@ module Nicr.Service {
             });
         }
 
+        deleteDatLog(thread:Model.Thread) {
+            return this.idbManager.delete(
+                'Dat', [thread.boardKey, thread.threadKey]
+            ).then(() => {
+                this.emit('delete:dat', {thread:thread});
+            });
+        }
+
         // ---- cache with indexedDB ----
 
         private saveToIDB(thread:Model.Thread, datText:string) {
