@@ -92,6 +92,14 @@ module Nicr.Controller {
             this.$el.remove();
         }
 
+        private onFetchThread(event) {
+            var thread:Model.Thread = event.thread;
+            if (thread.boardKey !== this.board.boardKey) return;
+            var $item = this.$el.find('[data-thread-key=' + thread.threadKey + ']');
+            $item.find('.res-count').text(thread.commentCount);
+            this.threadService.updateThreadDatSize(thread);
+        }
+
         private onClickThreadListItem(event) {
             var $threadListItem = $(event.currentTarget);
             var threadKey = $threadListItem.attr('data-thread-key');

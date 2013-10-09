@@ -41,8 +41,8 @@ module Nicr.Controller {
         }
 
         private onClose(event) {
-            this.threadService.off('fetch:' + this.thread.id());
             this.threadService.off('close:thread:' + this.thread.id());
+            this.commentService.off('fetch:' + this.thread.id());
             this.$el.remove();
         }
 
