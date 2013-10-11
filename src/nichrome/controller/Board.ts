@@ -43,8 +43,6 @@ module Nicr.Controller {
 
             this.$el.on('click', '.toggle-bbs-button', (e) => { this.onClickToggleButton(e) });
             this.$el.on('click', '.reload-board-button', (e) => { this.onClickReloadButton(e) });
-            this.$el.on('click', '.board-tab-item', (e) => { this.onClickBoardTabItem(e) });
-            this.$el.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
             this.$el.on('click', '.menu-button', (e) => { this.onClickMenuButton(e) });
 
             this.$el.resizable({handles:'e'});
@@ -96,6 +94,7 @@ module Nicr.Controller {
             this.$el.find('.board-content').append(threadListHtml);
             new Controller.ThreadList({
                 $el:this.$el.find('#thread-list-' + board.boardKey),
+                $tabItem:this.$el.find('#board-tab-' + board.boardKey),
                 board:board,
                 boardService:this.boardService,
                 threadService:this.threadService,
@@ -188,21 +187,6 @@ module Nicr.Controller {
         private onClickReloadButton(event) {
             var board = this.activeBoard;
             this.threadService.fetchWithCache(board, {force:true});
-        }
-
-        private onClickBoardTabItem(event) {
-            if ($(event.target).hasClass('close-button')) return;
-            var $tabItem = $(event.currentTarget);
-            var boardKey = $tabItem.attr('id').match(/^board-tab-(.+)$/)[1];
-            var board = this.tabModels.get(boardKey);
-            this.boardService.selectBoard(board);
-        }
-
-        private onClickCloseButton(event) {
-            var $tabItem = $(event.currentTarget).closest('.board-tab-item');
-            var boardKey = $tabItem.attr('id').match(/^board-tab-(.+)$/)[1];
-            var board = this.tabModels.get(boardKey);
-            this.boardService.closeBoard(board);
         }
 
         private onClickMenuButton(event) {

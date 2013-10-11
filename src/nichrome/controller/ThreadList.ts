@@ -8,6 +8,7 @@ module Nicr.Controller {
 
     export class ThreadList {
         private $el: JQuery;
+        private $tabItem: JQuery;
         private board: Model.Board;
         private threads: IndexedList<Model.Thread>;
         private sortKey: string;
@@ -21,6 +22,7 @@ module Nicr.Controller {
 
         constructor(args:{
             $el:JQuery;
+            $tabItem:JQuery;
             board:Model.Board;
             boardService:Service.Board;
             threadService:Service.Thread;
@@ -28,6 +30,7 @@ module Nicr.Controller {
             menuService:Service.Menu;
         }) {
             this.$el = args.$el;
+            this.$tabItem = args.$tabItem;
             this.board = args.board;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
@@ -44,6 +47,8 @@ module Nicr.Controller {
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
             this.$el.on('click', '.thread-list-header', (e) => { this.onClickThreadListHeader(e) });
             this.$el.on('contextmenu', '.thread-list-item', (e) => { this.onContextMenu(e) });
+            this.$tabItem.on('click', (e) => { this.onClickBoardTabItem(e) });
+            this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
         }
 
         private render() {
@@ -108,6 +113,15 @@ module Nicr.Controller {
             $item.replaceWith($newItem);
             this.threadService.updateThreadDatSize(thread);
             // XXX update 'this.threads'
+        }
+
+        private onClickBoardTabItem(event) {
+            if ($(event.target).hasClass('close-button')) return;
+            this.boardService.selectBoard(this.board);
+        }
+
+        private onClickCloseButton(event) {
+            this.boardService.closeBoard(this.board);
         }
 
         private onClickThreadListItem(event) {
