@@ -10,6 +10,7 @@ module Nicr.Model {
         number:number;
         momentum:number;
         datSize:number;
+        active: boolean;
 
         constructor(args) {
             this.boardKey     = args.boardKey;
@@ -19,7 +20,8 @@ module Nicr.Model {
             this.commentCount = args.commentCount;
             this.datSize      = args.datSize;
             this.number       = args.number;
-
+            this.active       = !(args.active instanceof Array) ? args.active
+                              : args.active[1] ? true : false;
             this.momentum = this.calcMomentum();
         }
 
@@ -56,6 +58,11 @@ module Nicr.Model {
             var epoch = new Date().getTime();
             var elapse = (epoch - this.threadKey * 1000) / 1000 || 1;
             return Math.floor(24 * 60 * 60 * this.commentCount / elapse);
+        }
+
+        logRate():number {
+            if (!this.datSize) return;
+            return Math.floor(this.datSize * 100 / this.commentCount);
         }
 
         equals(other:Thread):boolean {

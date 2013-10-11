@@ -140,6 +140,7 @@ div.board {
             padding-left: 5px;
             min-width: 1px;
             padding-top:2px;
+            position:relative;
         }
         .number, .momentum, .res-count {
             text-align: center;
@@ -160,12 +161,27 @@ div.board {
         }
     }
     .thread-list-item.selected {
-        background-color: #d4d4d4;
+        border-top: 1px solid #4d90fe;
+        border-bottom: 1px solid #4d90fe;
+        background-color: rgba(77,144,254,0.4);
     }
     .thread-list-item.opening {
         font-weight: bold;
     }
 
+    .thread-log-rate {
+        display: block;
+        border: 1px solid #c5c5c5;
+        position: absolute;
+        left  : 0px;
+        right : 0px;
+        top   : 0px;
+        bottom: 0px;
+        .rate-bar {
+            background-color: rgba(0,0,0,0.1);
+            height: 100%;
+        }
+    }
 }
 
 .board-container.selected

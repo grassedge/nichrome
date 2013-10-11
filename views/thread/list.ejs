@@ -3,7 +3,14 @@
     data-board-key="<%= thread.boardKey %>"
     data-thread-key="<%= thread.threadKey %>">
   <div class="number"><%= thread.number %></div>
-  <div class="thread-title"><%= thread.title %></div>
+  <div class="thread-title">
+    <% if (thread.datSize) { %>
+    <div class="thread-log-rate">
+      <div class="rate-bar" style="width:<%= thread.logRate() %>%"></div>
+    </div>
+    <% } %>
+    <span><%= thread.title %></span>
+  </div>
   <div class="momentum"><%= thread.momentum %></div>
   <div class="res-count"><%= thread.commentCount %></div>
 </li>

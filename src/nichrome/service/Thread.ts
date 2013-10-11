@@ -24,6 +24,7 @@ module Nicr.Service {
                 threads.forEach((thread) => {
                     thread.boardKey = board.boardKey;
                     thread.host = board.host;
+                    thread.active = true;
                 });
                 board.threadSize = threads.length;
                 var data = { board:board, threads:threads };

@@ -66,7 +66,14 @@ module Nicr.Controller {
             if (this.sortKey && this.sortOrder) {
                 threads.sort((a,b) => (+a[key] > +b[key] ? -1 : 1) * sign);
             }
-            this.threads = new IndexedList(threads);
+            var originalThreads = this.threads;
+            this.threads = threads = new IndexedList(threads);
+            if (originalThreads) {
+                originalThreads.forEach((thread:Model.Thread) => {
+                    var fetchedThread = threads.get(thread.id());
+                    if (fetchedThread) fetchedThread.datSize = thread.datSize;
+                });
+            }
             this.render();
             this.$el.find('.thread-list').removeClass('translucence');
         }
@@ -78,10 +85,16 @@ module Nicr.Controller {
         private onDeleteLog(event) {
             var thread = this.threads.get(event.thread.id());
             if (!thread) return;
-            this.$el.find(
+            var $threadItem = this.$el.find(
                 '[data-board-key="' + thread.boardKey + '"]' +
                 '[data-thread-key="' + thread.threadKey + '"]'
-            ).remove();
+            );
+            if (thread.active) {
+                $threadItem.find('.thread-log-rate').remove();
+                delete thread.datSize;
+            } else {
+                $threadItem.remove();
+            }
         }
 
         private onClose(event) {
@@ -94,10 +107,15 @@ module Nicr.Controller {
 
         private onFetchThread(event) {
             var thread:Model.Thread = event.thread;
+            // XXX refine: emit and listen event include boardKey.
             if (thread.boardKey !== this.board.boardKey) return;
             var $item = this.$el.find('[data-thread-key=' + thread.threadKey + ']');
-            $item.find('.res-count').text(thread.commentCount);
+            var selected = $item.hasClass('selected');
+            var html = JST['thread-list']({threads:[thread]});
+            var $newItem = $(html).toggleClass('selected', selected);
+            $item.replaceWith($newItem);
             this.threadService.updateThreadDatSize(thread);
+            // XXX update 'this.threads'
         }
 
         private onClickThreadListItem(event) {

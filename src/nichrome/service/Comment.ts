@@ -27,6 +27,7 @@ module Nicr.Service {
                 }
                 var comments = Model.Comment.fromDatText(datText);
                 thread.commentCount = comments.length;
+                thread.datSize = comments.length;
                 // include datText for cache;
                 var data = {thread:thread, comments:comments, datText:datText};
                 this.emit('fetch', data);
