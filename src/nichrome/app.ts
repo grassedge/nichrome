@@ -10,6 +10,7 @@ Nicr.router.connect('index', function(match, location, guard) {
     var boardService = new Nicr.Service.Board();
     var threadService = new Nicr.Service.Thread({idbManager:idbManager});
     var commentService = new Nicr.Service.Comment({idbManager:idbManager});
+    var menuService = new Nicr.Service.Menu({});
 
     var bbsController = new Nicr.Controller.BBS({
         $el: $('.bbs-container'),
@@ -22,12 +23,18 @@ Nicr.router.connect('index', function(match, location, guard) {
         configService: configService,
         boardService: boardService,
         threadService: threadService,
-        commentService: commentService
+        commentService: commentService,
+        menuService: menuService
     });
     var threadController = new Nicr.Controller.Thread({
         $el: $('.thread-container'),
         threadService: threadService,
         commentService: commentService
+    });
+    var threadListContextMenuController = new Nicr.Controller.ThreadListContextMenu({
+        threadService: threadService,
+        commentService: commentService,
+        menuService: menuService
     });
 
     bbsController.setup();

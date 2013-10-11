@@ -25,12 +25,14 @@ module Nicr.Controller {
             boardService:Service.Board;
             threadService:Service.Thread;
             commentService:Service.Comment;
+            menuService:Service.Menu;
         }) {
             this.$el = args.$el;
             this.board = args.board;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
             this.commentService = args.commentService;
+            this.menuService = args.menuService;
 
             this.threadService.on('fetch:' + this.board.id(), (e) => { this.onFetch(e); });
             this.threadService.on('fetch:start:' + this.board.id(), (e) => { this.onFetchStart(e); });
@@ -42,16 +44,6 @@ module Nicr.Controller {
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
             this.$el.on('click', '.thread-list-header', (e) => { this.onClickThreadListHeader(e) });
             this.$el.on('contextmenu', '.thread-list-item', (e) => { this.onContextMenu(e) });
-
-            this.menuService = new Service.Menu({});
-            var $contextMenu = $(JST['thread-list-context-menu']());
-            this.$el.append($contextMenu);
-            new ThreadListMenu({
-                $el: $contextMenu,
-                threadService: this.threadService,
-                commentService: this.commentService,
-                menuService: this.menuService
-            });
         }
 
         private render() {
@@ -150,11 +142,15 @@ module Nicr.Controller {
             var boardKey = $threadListItem.attr('data-board-key');
             var key = boardKey + '-' + threadKey;
             // XXX check this thread has log.
-            this.menuService.openContextMenu({thread:this.threads.get(key)});
+            this.menuService.openContextMenu({
+                thread:this.threads.get(key),
+                top: event.pageY,
+                left: event.pageX
+            });
         }
     }
 
-    class ThreadListMenu {
+    export class ThreadListContextMenu {
         private $el: JQuery;
         private thread: Model.Thread;
 
@@ -163,12 +159,13 @@ module Nicr.Controller {
         private menuService:Service.Menu;
 
         constructor(args:{
-            $el:JQuery;
             menuService:Service.Menu;
             threadService:Service.Thread;
             commentService:Service.Comment;
         }) {
-            this.$el = args.$el;
+            this.$el = $(JST['thread-list-context-menu']());
+            $('body').append(this.$el);
+
             this.menuService = args.menuService;
             this.threadService = args.threadService;
             this.commentService = args.commentService;
@@ -179,18 +176,19 @@ module Nicr.Controller {
             $(document).on('click', (e) => { this.onClickBody(e) });
         }
 
-        onOpen(event) {
+        private onOpen(event) {
             this.thread = event.thread;
             this.$el.show();
+            this.$el.css({top:event.top,left:event.left});
         }
 
-        onClickDeleteLog(event) {
+        private onClickDeleteLog(event) {
             if (!this.thread) return;
             this.threadService.deleteThreadLog(this.thread);
             this.commentService.deleteDatLog(this.thread);
         }
 
-        onClickBody(event) {
+        private onClickBody(event) {
             this.$el.hide();
             delete this.thread;
         }

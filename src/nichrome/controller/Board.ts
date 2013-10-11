@@ -15,8 +15,9 @@ module Nicr.Controller {
         private configService: Service.Config;
         private boardService: Service.Board;
         private threadService: Service.Thread;
-        // don't use in this Controller. pass it to Controller.ThreadList
+        // don't use in these Controller. pass it to Controller.ThreadList
         private commentService: Service.Comment;
+        private menuService: Service.Menu;
 
         constructor(args:{
             $el:JQuery;
@@ -24,12 +25,14 @@ module Nicr.Controller {
             boardService:Service.Board;
             threadService:Service.Thread;
             commentService:Service.Comment;
+            menuService:Service.Menu;
         }) {
             this.$el = args.$el;
             this.configService = args.configService;
             this.boardService = args.boardService;
             this.threadService = args.threadService;
             this.commentService = args.commentService;
+            this.menuService = args.menuService;
 
             this.tabModels = new IndexedList();
 
@@ -68,7 +71,7 @@ module Nicr.Controller {
             var menuHtml = JST['board-popup-menu']();
             this.$el.prepend(menuHtml);
             new BoardMenu({
-                $el: this.$el.find('.popup-menu'),
+                $el: this.$el.find('.board-menu'),
                 boardService: this.boardService,
                 threadService: this.threadService
             });
@@ -96,7 +99,8 @@ module Nicr.Controller {
                 board:board,
                 boardService:this.boardService,
                 threadService:this.threadService,
-                commentService:this.commentService
+                commentService:this.commentService,
+                menuService:this.menuService
             });
             this.boardService.saveTabToStorage(this.tabModels.getList());
         }
@@ -202,8 +206,7 @@ module Nicr.Controller {
         }
 
         private onClickMenuButton(event) {
-            console.log('open menu');
-            this.$el.find('.popup-menu').show();
+            this.$el.find('.board-menu').show();
         }
     }
 
