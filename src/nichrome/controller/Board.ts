@@ -110,7 +110,6 @@ module Nicr.Controller {
             if (!having) return;
             var idx = this.tabModels.indexOf(having);
             this.tabModels.splice(idx, 1);
-            this.$el.find('#board-tab-' + board.boardKey).remove();
             this.boardService.saveTabToStorage(this.tabModels.getList());
             return idx;
         }

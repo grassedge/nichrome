@@ -100,6 +100,7 @@ module Nicr.Controller {
             this.boardService.off('close:board:' + this.board.id());
             this.commentService.off('fetch');
             this.$el.remove();
+            this.$tabItem.remove();
         }
 
         private onFetchThread(event) {
