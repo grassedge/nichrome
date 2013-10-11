@@ -28,8 +28,8 @@ module Nicr.Controller {
             this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
             this.commentService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
 
-            this.$el.on('click', '.comment-list-up-button', (e) => { this.onUpButton(e) });
-            this.$el.on('click', '.comment-list-down-button', (e) => { this.onDownButton(e) });
+            this.$el.on('click', '.comment-list-up-button', (e) => { this.onClickUpButton(e) });
+            this.$el.on('click', '.comment-list-down-button', (e) => { this.onClickDownButton(e) });
             this.$tabItem.on('click', (e) => { this.onClickThreadTabItem(e) });
             this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
         }
@@ -52,11 +52,11 @@ module Nicr.Controller {
             this.$tabItem.remove();
         }
 
-        private onUpButton(event) {
+        private onClickUpButton(event) {
             this.$el.find('.comment-list').scrollTop(0);
         }
 
-        private onDownButton(event) {
+        private onClickDownButton(event) {
             this.$el.find('.comment-list').scrollTop(10000000000); // irresponsible
         }
 
