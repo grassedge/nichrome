@@ -5,6 +5,7 @@ module Nicr.Controller {
     export class CommentList {
 
         private $el: JQuery;
+        private $tabItem: JQuery;
         private thread: Model.Thread;
         private comments: IndexedList<Model.Comment>;
 
@@ -13,11 +14,13 @@ module Nicr.Controller {
 
         constructor(args:{
             $el:JQuery;
+            $tabItem:JQuery;
             thread:Model.Thread;
             threadService:Service.Thread;
             commentService:Service.Comment;
         }) {
             this.$el = args.$el;
+            this.$tabItem = args.$tabItem;
             this.thread = args.thread;
             this.threadService = args.threadService;
             this.commentService = args.commentService;
@@ -27,6 +30,8 @@ module Nicr.Controller {
 
             this.$el.on('click', '.comment-list-up-button', (e) => { this.onUpButton(e) });
             this.$el.on('click', '.comment-list-down-button', (e) => { this.onDownButton(e) });
+            this.$tabItem.on('click', (e) => { this.onClickThreadTabItem(e) });
+            this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
         }
 
         private render() {
@@ -44,6 +49,7 @@ module Nicr.Controller {
             this.threadService.off('close:thread:' + this.thread.id());
             this.commentService.off('fetch:' + this.thread.id());
             this.$el.remove();
+            this.$tabItem.remove();
         }
 
         private onUpButton(event) {
@@ -52,6 +58,15 @@ module Nicr.Controller {
 
         private onDownButton(event) {
             this.$el.find('.comment-list').scrollTop(10000000000); // irresponsible
+        }
+
+        private onClickThreadTabItem(event) {
+            if ($(event.target).hasClass('close-button')) return;
+            this.threadService.selectThread(this.thread);
+        }
+
+        private onClickCloseButton(event) {
+            this.threadService.closeThread(this.thread);
         }
 
     }

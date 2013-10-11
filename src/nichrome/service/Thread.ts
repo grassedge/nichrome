@@ -98,7 +98,14 @@ module Nicr.Service {
         }
 
         openThread(thread:Model.Thread) {
-            this.emit('open:thread', {thread:thread});
+            this.emit('add:thread', {thread:thread});
+            this.emit('select:thread', {thread:thread});
+            this.saveActiveTabToStorage(thread.id());
+        }
+
+        selectThread(thread:Model.Thread) {
+            this.emit('select:thread', {thread:thread});
+            this.saveActiveTabToStorage(thread.id());
         }
 
         closeThread(thread:Model.Thread) {
@@ -202,7 +209,7 @@ module Nicr.Service {
 
         // ---- cache with local storage ----
 
-        saveActiveTabToStorage(key:string) {
+        private saveActiveTabToStorage(key:string) {
             this.storage.setItem('nicr:thread-tab-active', key);
         }
 
