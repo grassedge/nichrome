@@ -1,4 +1,7 @@
-<li id="thread-tab-<%= thread.id() %>" class="thread-tab-item">
-  <span class="tab-item-content"><%= thread.title %></span>
+<li id="thread-tab-<%= thread.id() %>"
+    class="thread-tab-item <%= thread.active ? 'active' : 'expired' %>">
+  <span class="tab-item-content">
+    <%= thread.title %>
+  </span>
   <span class="close-button">close</span>
 </lib>

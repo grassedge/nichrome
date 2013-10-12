@@ -38,12 +38,17 @@ module Nicr.Controller {
             var activeKey = this.threadService.retrieveActiveTabFromStorage();
 
             var tab = this.threadService.retrieveTabFromStorage();
-            tab.forEach((thread) => {
-                this.threadService.openThread(thread);
-            });
+            this.threadService.retrieveByKeysFromIDB(tab).done((storedList) => {
+                var threads = new IndexedList(storedList);
 
-            var thread = this.tabModels.get(activeKey);
-            if (thread) this.selectThread(thread);
+                tab.forEach((thread) => {
+                    var stored = threads.get(thread.id());
+                    this.threadService.openThread(stored || thread);
+                });
+
+                var thread = this.tabModels.get(activeKey);
+                if (thread) this.threadService.selectThread(thread);
+            });
         }
 
         private addThread(thread:Model.Thread) {

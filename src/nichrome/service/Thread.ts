@@ -54,7 +54,7 @@ module Nicr.Service {
 
             if (args.force) { return this.fetchAndCache(board); }
 
-            return this.retrieveFromIDB(board).then((threads:Model.Thread[]) => {
+            return this.retrieveByBoardFromIDB(board).then((threads:Model.Thread[]) => {
                 if (!!threads.length) {
                     var data = { board:board, threads:threads };
                     this.emit('fetch', data);
@@ -202,7 +202,18 @@ module Nicr.Service {
             });
         }
 
-        private retrieveFromIDB(board:Model.Board):JQueryPromise<any> {
+        retrieveByKeysFromIDB(threads:Model.Thread[]):JQueryPromise<any> {
+            var deferreds = threads.map((thread) => this.idbManager.get(
+                'Thread', [thread.boardKey, thread.threadKey]
+            ));
+            return $.when.apply($, deferreds).then(() => {
+                return Array.prototype
+                    .filter.call(arguments, (thread) => thread)
+                    .map((thread) => new Model.Thread(thread));
+            });
+        }
+
+        private retrieveByBoardFromIDB(board:Model.Board):JQueryPromise<any> {
             return this.idbManager.search(
                 'Thread', [board.boardKey, 1], { indexName:'active' }
             ).then((threads) => {
