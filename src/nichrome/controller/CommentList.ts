@@ -30,6 +30,8 @@ module Nicr.Controller {
 
             this.$el.on('click', '.comment-list-up-button', (e) => { this.onClickUpButton(e) });
             this.$el.on('click', '.comment-list-down-button', (e) => { this.onClickDownButton(e) });
+            this.$el.on('click', '.comment-list-link-button', (e) => { this.onClickLinkButton(e) });
+            this.$el.on('click', '.comment-list-image-button', (e) => { this.onClickImageButton(e) });
             this.$tabItem.on('click', (e) => { this.onClickThreadTabItem(e) });
             this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
         }
@@ -58,6 +60,36 @@ module Nicr.Controller {
 
         private onClickDownButton(event) {
             this.$el.find('.comment-list').scrollTop(10000000000); // irresponsible
+        }
+
+        private onClickLinkButton(event) {
+            var $button = $(event.currentTarget);
+            var $comments = this.$el.find('.comment');
+            if ($button.hasClass('on')) {
+                $comments.show();
+                $button.removeClass('on');
+            } else {
+                $comments.each((idx, el) => {
+                    this.comments.at(idx).hasLink() ? $(el).show() : $(el).hide();
+                });
+                $button.parent().find('.on').removeClass('on');
+                $button.addClass('on');
+            }
+        }
+
+        private onClickImageButton(event) {
+            var $button = $(event.currentTarget);
+            var $comments = this.$el.find('.comment');
+            if ($button.hasClass('on')) {
+                $comments.show();
+                $button.removeClass('on');
+            } else {
+                $comments.each((idx, el) => {
+                    this.comments.at(idx).hasImage() ? $(el).show() : $(el).hide();
+                });
+                $button.parent().find('.on').removeClass('on');
+                $button.addClass('on');
+            }
         }
 
         private onClickThreadTabItem(event) {

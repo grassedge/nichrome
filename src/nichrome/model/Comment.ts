@@ -12,6 +12,9 @@ module Nicr.Model {
         private static LINK_REGEXP =
             /(\b(h?ttps?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
+        private _hasImage: boolean;
+        private _hasLink: boolean;
+
         constructor(args) {
             for (var key in args) this[key] = args[key];
         }
@@ -51,12 +54,36 @@ module Nicr.Model {
                 Comment.LINK_REGEXP,
                 function(whole, path, suffix) {
                     var full = (whole[0] == 'h' ? '' : 'h') + whole;
-                    return whole.match(/(jpeg|jpg|png|gif)$/)
+                    return whole.match(/(jpeg|jpg|png|gif)$/i)
                         ? '<div><img class="image" src="' + full + '" /></div>'
                         : '<a href="' + full + '" class="autolink" target="_blank">'
                         + whole + '</a>';
                 }
             );
+        }
+
+        private parseBody() {
+            var match;
+            if (match = this.body.match(Comment.LINK_REGEXP)) {
+                var url = match[0];
+                if (url.match(/(jpeg|jpg|png|gif)$/i)) {
+                    this._hasImage = true;
+                } else {
+                    this._hasLink = true;
+                }
+            }
+        }
+
+        hasImage():boolean {
+            if (this._hasImage) return true;
+            this.parseBody();
+            return this._hasImage;
+        }
+
+        hasLink():boolean {
+            if (this._hasLink) return true;
+            this.parseBody();
+            return this._hasLink;
         }
 
         id():string {
