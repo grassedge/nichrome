@@ -70,7 +70,8 @@ module Nicr.Service {
                 'Thread', [thread.boardKey, thread.threadKey],
                 {
                     datSize : thread.commentCount,
-                    commentCount : thread.commentCount
+                    commentCount : thread.commentCount,
+                    isNew : thread.isNew
                 }
             );
         }
@@ -128,10 +129,12 @@ module Nicr.Service {
                 threads.forEach((thread) => {
                     var storedThread = stored.get(thread.id());
                     if (storedThread) {
+                        delete thread.isNew;
                         updateList.push(thread);
                         var idx = stored.indexOf(storedThread);
                         stored.splice(idx, 1);
                     } else {
+                        thread.isNew = true;
                         createList.push(thread);
                     }
                 })
@@ -155,6 +158,7 @@ module Nicr.Service {
                             title: thread.title,
                             commentCount: thread.commentCount,
                             number: thread.number,
+                            isNew: thread.isNew
                         }
                     ).fail((e) => {
                         console.log('failed to save datText');
@@ -166,7 +170,8 @@ module Nicr.Service {
                         'Thread', [thread.boardKey, thread.threadKey],
                         {
                             number : thread.number,
-                            commentCount : thread.commentCount
+                            commentCount : thread.commentCount,
+                            isNew : thread.isNew
                         }
                     );
                 });

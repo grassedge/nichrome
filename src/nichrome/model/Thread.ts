@@ -11,6 +11,7 @@ module Nicr.Model {
         momentum:number;
         datSize:number;
         active: boolean;
+        isNew: boolean;
 
         constructor(args) {
             this.boardKey     = args.boardKey;
@@ -20,6 +21,7 @@ module Nicr.Model {
             this.commentCount = args.commentCount;
             this.datSize      = args.datSize;
             this.number       = args.number;
+            this.isNew        = args.isNew;
             this.active       = !(args.active instanceof Array) ? args.active
                               : args.active[1] ? true : false;
             this.momentum = this.calcMomentum();

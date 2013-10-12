@@ -65,12 +65,16 @@ module Nicr.Controller {
             }
             var originalThreads = this.threads;
             this.threads = threads = new IndexedList(threads);
-            if (originalThreads) {
-                originalThreads.forEach((thread:Model.Thread) => {
-                    var fetchedThread = threads.get(thread.id());
-                    if (fetchedThread) fetchedThread.datSize = thread.datSize;
-                });
-            }
+            threads.forEach((thread:Model.Thread) => {
+                if (!originalThreads) return;
+                var originalThread = originalThreads.get(thread.id());
+                if (originalThread) {
+                    thread.datSize = originalThread.datSize;
+                    thread.isNew = false;
+                } else {
+                    thread.isNew = true;
+                }
+            });
             this.render();
             this.$el.find('.thread-list').removeClass('translucence');
         }
@@ -104,16 +108,24 @@ module Nicr.Controller {
         }
 
         private onFetchThread(event) {
-            var thread:Model.Thread = event.thread;
+            var fetchedThread:Model.Thread = event.thread;
+            // while setup, this controller has no 'threads'. so return immediately.
+            if (!this.threads) return;
             // XXX refine: emit and listen event include boardKey.
-            if (thread.boardKey !== this.board.boardKey) return;
+            if (fetchedThread.boardKey !== this.board.boardKey) return;
+
+            var thread = this.threads.get(fetchedThread.id());
+            thread.commentCount = fetchedThread.commentCount;
+            thread.datSize      = fetchedThread.datSize;
+            delete thread.isNew;
+
             var $item = this.$el.find('[data-thread-key=' + thread.threadKey + ']');
             var selected = $item.hasClass('selected');
             var html = JST['thread-list']({threads:[thread]});
             var $newItem = $(html).toggleClass('selected', selected);
             $item.replaceWith($newItem);
+
             this.threadService.updateThreadDatSize(thread);
-            // XXX update 'this.threads'
         }
 
         private onClickBoardTabItem(event) {

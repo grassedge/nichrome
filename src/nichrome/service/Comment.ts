@@ -20,7 +20,6 @@ module Nicr.Service {
                 console.log(status);
                 if (status == '203') {
                     var expired = Model.Comment.parseExpiredDat(datText);
-                    console.log(expired);
                     this.emit('fetch:expired', expired);
                     this.emit('fetch:expired:' + thread.id(), expired);
                     return expired;
