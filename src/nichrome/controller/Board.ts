@@ -140,7 +140,7 @@ module Nicr.Controller {
             board = this.tabModels.get(board.id());
             board.threadSize = threads.length;
             this.boardService.saveTabToStorage(this.tabModels.getList());
-            this.setThreadListSize(board);
+            if (board.equals(this.activeBoard)) this.setThreadListSize(board);
         }
 
         private onAddBoard(event) {
