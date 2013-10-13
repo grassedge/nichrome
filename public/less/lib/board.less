@@ -164,26 +164,35 @@ div.board {
             border-left:1px solid white;
         }
     }
+
     .thread-list-item.selected {
-        border-top: 1px solid #4d90fe;
-        border-bottom: 1px solid #4d90fe;
-        background-color: rgba(77,144,254,0.4);
+        background-color: #3875d7;
+        color: white;
     }
+
     .thread-list-item.opening {
         font-weight: bold;
     }
 
     .thread-log-rate {
         display: block;
-        border: 1px solid #c5c5c5;
+        border: 1px solid #4d90fe;
         position: absolute;
         left  : 0px;
         right : 0px;
         top   : 0px;
         bottom: 0px;
         .rate-bar {
-            background-color: rgba(0,0,0,0.1);
+            background-color: rgba(77,144,254,0.4);
             height: 100%;
+        }
+    }
+
+    .thread-list-item.selected
+    .thread-log-rate {
+        border: 1px solid #8dcefe;
+        .rate-bar {
+            background-color: rgba(90,184,254,0.4);
         }
     }
 }
