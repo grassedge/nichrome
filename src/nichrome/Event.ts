@@ -8,11 +8,15 @@ module Nicr {
             this.handlers[name].push(func);
         }
 
-        off(name?) {
+        off(name?:string, func?:(...values:any[]) => any) {
             if (name === undefined) {
                 this.handlers = {};
-            } else {
+            } else if (func === undefined) {
                 this.handlers[name] = [];
+            } else {
+                this.handlers[name] = this.handlers[name].filter(
+                    (handler) => (handler !== func)
+                );
             }
         }
 
