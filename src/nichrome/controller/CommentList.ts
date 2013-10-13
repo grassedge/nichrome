@@ -27,6 +27,7 @@ module Nicr.Controller {
 
             this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
             this.commentService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
+            this.commentService.on('fetch:expired:' + this.thread.id(), (e) => { this.onFetchExpired(e) });
 
             this.$el.on('click', '.comment-list-up-button', (e) => { this.onClickUpButton(e) });
             this.$el.on('click', '.comment-list-down-button', (e) => { this.onClickDownButton(e) });
@@ -41,15 +42,42 @@ module Nicr.Controller {
             this.$el.find('.comment-list').html(html);
         }
 
+        private renderExpired(expired) {
+            var html = JST['comment-expired']({expired:expired});
+            this.$el.find('.comment-list').html(html);
+        }
+
         private onFetch(event) {
             this.comments = new IndexedList(event.comments);
             this.thread = event.thread;
             this.render();
         }
 
+        private onFetchExpired(event) {
+            if (!this.comments) {
+                // XXX refine design and specification.
+                //     it's better to save thread to IDB even if it was expired.
+                this.renderExpired(event);
+            }
+
+            var $dialog = $(JST['comment-expired-dialog']());
+            this.$el.append($dialog);
+            $dialog.hide().fadeIn(250, () => {
+                setTimeout(() => {
+                    $dialog.fadeOut(250, () => { $dialog.remove() });
+                }, 1500)
+            });
+
+            this.$tabItem.removeClass('active');
+            this.$tabItem.addClass('expired');
+            this.thread.active = false;
+            this.threadService.updateExpired(this.thread);
+        }
+
         private onClose(event) {
             this.threadService.off('close:thread:' + this.thread.id());
             this.commentService.off('fetch:' + this.thread.id());
+            this.commentService.off('fetch:expired:' + this.thread.id());
             this.$el.remove();
             this.$tabItem.remove();
         }

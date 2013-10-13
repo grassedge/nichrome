@@ -76,6 +76,16 @@ module Nicr.Service {
             );
         }
 
+        updateExpired(thread:Model.Thread) {
+            return this.idbManager.update(
+                'Thread', [thread.boardKey, thread.threadKey],
+                {
+                    active : [thread.boardKey, 0],
+                    number : undefined
+                }
+            );
+        }
+
         deleteThreadLog(thread:Model.Thread) {
             return this.idbManager.search(
                 'Thread', [thread.boardKey, thread.threadKey],

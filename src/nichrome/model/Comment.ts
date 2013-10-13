@@ -28,6 +28,34 @@ module Nicr.Model {
             });
         }
 
+        static parseExpiredDat(datText:string) {
+            var lines = datText.toString().split(/\n/)
+                .filter((item) => (item !== ''))
+                .map((line) => Comment.parseLine(line));
+
+            var first = new Comment(lines[0]);
+            var logDescription:string;
+            if (lines.length === 2) {
+                logDescription = lines[1].body;
+            } else {
+                var last = new Comment(lines[2]);
+                var lastUpdated = lines[1].createdAt;
+                var sizes       = lines[1].name.match(/^(\d+),\s*(\d+)/);
+                var lastIndex = sizes[1];
+                var size      = sizes[2];
+                logDescription = lines[3].body;
+            }
+            return {
+                isExpired:true,
+                first:first,
+                last:last,
+                lastIndex:lastIndex,
+                size:size,
+                lastUpdated:lastUpdated,
+                logDescription:logDescription
+            };
+        }
+
         private static parseLine(line:string) {
             var split = line.split(/<>/);
             var name  = split[0];

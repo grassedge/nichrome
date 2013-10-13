@@ -41,10 +41,11 @@ div.thread-container {
             }
         }
     }
-    div.thread {
+    .thread {
         .vbox;
         width: 100%;
         .box-flex;
+        position: relative;
     }
 }
 .thread-container-footer {
@@ -60,7 +61,7 @@ div.thread-container {
         width: 150px;
         padding-right: 5px;
     }
-    .expired {
+    .thread-tab-item.expired {
         color: #888;
         border: 1px solid #ddd;
     }
@@ -90,4 +91,15 @@ div.thread-container {
 
 .comment-list-down-button {
     cursor: pointer;
+}
+
+.comment-expired-dialog {
+    .popup;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color : rgba(0,0,0,0.7);
+    color: white;
+    padding : 10px;
+    text-align : center;
 }
