@@ -21,6 +21,7 @@ module Nicr.Service {
                 if (status == '203') {
                     var expired = Model.Comment.parseExpiredDat(datText);
                     this.emit('fetch:expired', expired);
+                    this.emit('fetch:expired:' + thread.boardKey, expired);
                     this.emit('fetch:expired:' + thread.id(), expired);
                     return expired;
                 }
@@ -51,6 +52,7 @@ module Nicr.Service {
                 if (comments) {
                     var data = {thread:thread, comments:comments};
                     this.emit('fetch', data);
+                    this.emit('fetch:' + thread.boardKey, data);
                     this.emit('fetch:' + thread.id(), data);
                     return data;
                 }

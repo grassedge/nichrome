@@ -11,6 +11,7 @@ module Nicr.Controller {
 
         private threadService: Service.Thread;
         private commentService: Service.Comment;
+        private handlers: any = {};
 
         constructor(args:{
             $el:JQuery;
@@ -25,7 +26,11 @@ module Nicr.Controller {
             this.threadService = args.threadService;
             this.commentService = args.commentService;
 
+            var handlers = this.handlers;
+            handlers.onFetchThread = (e) => { this.onFetchThread(e) };
+
             this.threadService.on('close:thread:' + this.thread.id(), (e) => { this.onClose(e) });
+            this.threadService.on('fetch:' + this.thread.boardKey, handlers.onFetchThread);
             this.commentService.on('fetch:' + this.thread.id(), (e) => { this.onFetch(e) });
             this.commentService.on('fetch:expired:' + this.thread.id(), (e) => { this.onFetchExpired(e) });
 
@@ -45,6 +50,21 @@ module Nicr.Controller {
         private renderExpired(expired) {
             var html = JST['comment-expired']({expired:expired});
             this.$el.find('.comment-list').html(html);
+        }
+
+        private onFetchThread(event) {
+            var threads = event.threads;
+            var thread;
+            // XXX linear scan is high cost. fix algorithm.
+            for (var i = 0, len = threads.length; i < len; i++) {
+                if (this.thread.equals(threads[i])) {
+                    thread = threads[i]
+                    break;
+                }
+            }
+            var active = !thread ? false : thread.active;
+            this.$tabItem.toggleClass('active', active);
+            this.$tabItem.toggleClass('expired', !active);
         }
 
         private onFetch(event) {
@@ -76,6 +96,7 @@ module Nicr.Controller {
 
         private onClose(event) {
             this.threadService.off('close:thread:' + this.thread.id());
+            this.threadService.off('fetch:' + this.thread.boardKey, this.handlers.onFetchThread);
             this.commentService.off('fetch:' + this.thread.id());
             this.commentService.off('fetch:expired:' + this.thread.id());
             this.$el.remove();
