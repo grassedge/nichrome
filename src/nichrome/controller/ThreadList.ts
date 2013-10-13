@@ -41,7 +41,7 @@ module Nicr.Controller {
             this.threadService.on('fetch:start:' + this.board.id(), (e) => { this.onFetchStart(e); });
             this.threadService.on('delete:log', (e) => { this.onDeleteLog(e); });
             this.boardService.on('close:board:' + this.board.id(), (e) => { this.onClose(e); });
-            this.commentService.on('fetch', (e) => { this.onFetchThread(e) });
+            this.commentService.on('fetch:' + this.board.id(), (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
@@ -102,7 +102,7 @@ module Nicr.Controller {
             this.threadService.off('fetch:' + this.board.id());
             this.threadService.off('fetch:start:' + this.board.id());
             this.boardService.off('close:board:' + this.board.id());
-            this.commentService.off('fetch');
+            this.commentService.off('fetch:' + this.board.id());
             this.$el.remove();
             this.$tabItem.remove();
         }
@@ -111,10 +111,9 @@ module Nicr.Controller {
             var fetchedThread:Model.Thread = event.thread;
             // while setup, this controller has no 'threads'. so return immediately.
             if (!this.threads) return;
-            // XXX refine: emit and listen event include boardKey.
-            if (fetchedThread.boardKey !== this.board.boardKey) return;
 
             var thread = this.threads.get(fetchedThread.id());
+            if (!thread) return;
             thread.commentCount = fetchedThread.commentCount;
             thread.datSize      = fetchedThread.datSize;
             delete thread.isNew;

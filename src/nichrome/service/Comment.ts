@@ -30,6 +30,7 @@ module Nicr.Service {
                 // include datText for cache;
                 var data = {thread:thread, comments:comments, datText:datText};
                 this.emit('fetch', data);
+                this.emit('fetch:' + thread.boardKey, data);
                 this.emit('fetch:' + thread.id(), data);
                 return data;
             });
