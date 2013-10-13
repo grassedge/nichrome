@@ -1,0 +1,27 @@
+<% var comment = expired.first %>
+<div class="comment" data-comment-id="<%= comment.id() %>">
+  <span class="res-no"><%= comment.number %></span>
+  <span class="name"><b><%= comment.name %></b></span>
+  <span class="timestamp"><%= comment.createdAt %></span>
+  <% if (comment.authorId) { %>
+  <span class="author-id-label">ID</span>
+  <span class="author-id"><%= comment.authorId %></span>
+  <% } %>
+  <div class="body"><%= comment.replacedBody() %></div>
+</div>
+<% if (expired.last) { %>
+<% var comment = expired.last %>
+<p>|</p>
+<p>|</p>
+<p>|</p>
+<div class="comment" data-comment-id="<%= comment.id() %>">
+  <span class="res-no"><%= comment.number %></span>
+  <span class="name"><b><%= comment.name %></b></span>
+  <span class="timestamp"><%= comment.createdAt %></span>
+  <% if (comment.authorId) { %>
+  <span class="author-id-label">ID</span>
+  <span class="author-id"><%= comment.authorId %></span>
+  <% } %>
+  <div class="body"><%= comment.replacedBody() %></div>
+</div>
+<% } %>
