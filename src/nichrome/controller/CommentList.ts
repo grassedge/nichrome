@@ -47,6 +47,13 @@ module Nicr.Controller {
             this.$el.find('.comment-list').html(html);
         }
 
+        private updateTabItem() {
+            var $newItem = $(JST['thread-tab-item']({thread:this.thread}));
+            this.$tabItem.empty().append($newItem.children());
+            this.$tabItem.toggleClass('active', this.thread.active);
+            this.$tabItem.toggleClass('expired', !this.thread.active);
+        }
+
         private renderExpired(expired) {
             var html = JST['comment-expired']({expired:expired});
             this.$el.find('.comment-list').html(html);
@@ -58,19 +65,24 @@ module Nicr.Controller {
             // XXX linear scan is high cost. fix algorithm.
             for (var i = 0, len = threads.length; i < len; i++) {
                 if (this.thread.equals(threads[i])) {
-                    thread = threads[i]
+                    thread = threads[i];
                     break;
                 }
             }
-            var active = !thread ? false : thread.active;
-            this.$tabItem.toggleClass('active', active);
-            this.$tabItem.toggleClass('expired', !active);
+            if (thread) {
+                this.thread.active = thread.active;
+                this.thread.commentCount = thread.commentCount;
+            } else {
+                this.thread.active = false;
+            }
+            this.updateTabItem();
         }
 
         private onFetch(event) {
             this.comments = new IndexedList(event.comments);
             this.thread = event.thread;
             this.render();
+            this.updateTabItem();
         }
 
         private onFetchExpired(event) {

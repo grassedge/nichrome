@@ -60,7 +60,29 @@ div.thread-container {
         .tab-item;
         width: 150px;
         padding-right: 5px;
+
     }
+
+    .thread-log-rate {
+        position: absolute;
+        left  : 0px;
+        right : 0px;
+        top   : 0px;
+        bottom: 0px;
+        .rate-bar {
+            background-color: rgba(0,0,0,.05);
+            border-right: 1px solid #aaa;
+            height: 100%;
+        }
+    }
+
+    .thread-tab-item.expired
+    .thread-log-rate {
+        .rate-bar {
+            border: none;
+        }
+    }
+
     .thread-tab-item.expired {
         color: #888;
         border: 1px solid #ddd;

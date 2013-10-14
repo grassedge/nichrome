@@ -1,5 +1,13 @@
 <li id="thread-tab-<%= thread.id() %>"
     class="thread-tab-item <%= thread.active ? 'active' : 'expired' %>">
+  <% if (thread.active && thread.datSize) { %>
+  <div class="thread-log-rate">
+    <% var rate = thread.logRate() %>
+    <div class="rate-bar"
+         style="width:<%= rate %>%;<%= rate < 100 ? '' : 'border:none;' %>">
+    </div>
+  </div>
+  <% } %>
   <span class="tab-item-content">
     <%= thread.title %>
   </span>
