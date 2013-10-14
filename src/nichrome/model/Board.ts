@@ -32,7 +32,7 @@ module Nicr.Model {
         }
 
         private parse2chUrl(url:string) {
-            var match = url.match(/\/\/([^\/]+\.2ch\.net)\/([^\/]+)\//);
+            var match = url.match(/\/\/([^\/]+(?:\.2ch\.net|\.bbspink.com|\.machi\.to))\/([^\/]+)\//);
             if (!match) return;
             return {
                 host: match[1],
