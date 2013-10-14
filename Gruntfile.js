@@ -89,7 +89,7 @@ module.exports = function(grunt) {
             },
             typescript: {
                 files: ['src/nichrome/**/*.ts'],
-                tasks: ['typescript']
+                tasks: ['typescript', 'uglify']
             }
         },
     });
