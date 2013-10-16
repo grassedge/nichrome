@@ -93,5 +93,7 @@ module.exports = function(grunt) {
             }
         },
     });
+
+    grunt.task.registerTask('default', ['jst', 'less', 'cssmin', 'typescript', 'uglify']);
 }
 
