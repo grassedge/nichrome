@@ -8,7 +8,7 @@ module Nicr.Controller {
 
     export class ThreadListContextMenu {
         private $el: JQuery;
-        private thread: Model.Thread;
+        private threads: Model.Thread[];
 
         private threadService:Service.Thread;
         private commentService:Service.Comment;
@@ -33,20 +33,22 @@ module Nicr.Controller {
         }
 
         private onOpen(event) {
-            this.thread = event.thread;
+            this.threads = event.threads;
             this.$el.show();
             this.$el.css({top:event.top,left:event.left});
         }
 
         private onClickDeleteLog(event) {
-            if (!this.thread) return;
-            this.threadService.deleteThreadLog(this.thread);
-            this.commentService.deleteDatLog(this.thread);
+            if (!this.threads) return;
+            this.threads.forEach((thread) => {
+                this.threadService.deleteThreadLog(thread);
+                this.commentService.deleteDatLog(thread);
+            });
         }
 
         private onClickBody(event) {
             this.$el.hide();
-            delete this.thread;
+            delete this.threads;
         }
     }
 }

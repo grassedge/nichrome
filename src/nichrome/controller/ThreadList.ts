@@ -11,6 +11,7 @@ module Nicr.Controller {
         private $tabItem: JQuery;
         private board: Model.Board;
         private threads: IndexedList<Model.Thread>;
+        private selectedList: IndexedList<Model.Thread> = new IndexedList();
         private sortKey: string;
         private sortOrder: number;
 
@@ -54,6 +55,17 @@ module Nicr.Controller {
         private render() {
             var html = JST['thread-list']({threads:this.threads});
             this.$el.find('.thread-list').html(html);
+        }
+
+        private renderSelected() {
+            this.$el.find('.selected').removeClass('selected');
+            this.$el.find('.thread-list-item').filter((idx, item) => {
+                var $item = $(item);
+                var threadKey = $item.attr('data-thread-key');
+                var boardKey  = $item.attr('data-board-key');
+                var key = boardKey + '-' + threadKey;
+                return this.selectedList.get(key) ? true : false;
+            }).addClass('selected');
         }
 
         private onFetch(event) {
@@ -139,8 +151,18 @@ module Nicr.Controller {
         private onClickThreadListItem(event) {
             var $threadListItem = $(event.currentTarget);
             var threadKey = $threadListItem.attr('data-thread-key');
-            var key = this.board.id() + '-' + threadKey;
-            this.threadService.openThread(this.threads.get(key));
+            var boardKey = $threadListItem.attr('data-board-key');
+            var key = boardKey + '-' + threadKey;
+            var thread = this.threads.get(key);
+
+            if (event.metaKey) {
+                this.selectedList.push(thread);
+                this.renderSelected();
+            } else {
+                this.selectedList = new IndexedList([thread]);
+                this.renderSelected();
+                this.threadService.openThread(thread);
+            }
         }
 
         private onSubmitFilter(event) {
@@ -167,9 +189,13 @@ module Nicr.Controller {
             var threadKey = $threadListItem.attr('data-thread-key');
             var boardKey = $threadListItem.attr('data-board-key');
             var key = boardKey + '-' + threadKey;
+
+            var thread = this.threads.get(key);
+            var threads = this.selectedList.get(thread.id())
+                ? this.selectedList.getList() : [thread];
             // XXX check this thread has log.
             this.menuService.openContextMenu({
-                thread:this.threads.get(key),
+                threads:threads,
                 top: event.pageY,
                 left: event.pageX
             });

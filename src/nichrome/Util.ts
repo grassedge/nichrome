@@ -22,6 +22,10 @@ module Nicr {
             this.index[value.id()] = value;
         }
 
+        slice(start:number, end?:number):T[] {
+            return this.getList().slice(start, end);
+        }
+
         splice(index:number, howMany:number, ...values:T[]):T[] {
             var args = [index, howMany].concat(values);
             var removed = Array.prototype.splice.apply(this.list, args);
