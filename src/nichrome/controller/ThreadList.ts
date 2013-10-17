@@ -49,6 +49,7 @@ module Nicr.Controller {
             this.$el.on('click', '.thread-list-header', (e) => { this.onClickThreadListHeader(e) });
             this.$el.on('contextmenu', '.thread-list-item', (e) => { this.onContextMenu(e) });
             this.$tabItem.on('click', (e) => { this.onClickBoardTabItem(e) });
+            this.$tabItem.on('dblclick', (e) => { this.onDblClickBoardTabItem(e) });
             this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
         }
 
@@ -142,6 +143,10 @@ module Nicr.Controller {
         private onClickBoardTabItem(event) {
             if ($(event.target).hasClass('close-button')) return;
             this.boardService.selectBoard(this.board);
+        }
+
+        private onDblClickBoardTabItem(event) {
+            this.threadService.fetchWithCache(this.board, {force:true});
         }
 
         private onClickCloseButton(event) {
