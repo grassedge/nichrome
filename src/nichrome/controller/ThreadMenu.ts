@@ -20,11 +20,16 @@ module Nicr.Controller {
             this.threadService = args.threadService;
 
             this.$el.on('click', '.open-recent', (e) => { this.onClickOpenRecent(e) });
+            this.$el.on('click', '.close-expired', (e) => { this.onClickCloseExpired(e) });
             $(document).on('click', (e) => { this.onClickBody(e) });
         }
 
         onClickOpenRecent(event) {
             this.threadService.openRecent();
+        }
+
+        onClickCloseExpired(event) {
+            this.threadService.closeExpired();
         }
 
         onClickBody(event) {

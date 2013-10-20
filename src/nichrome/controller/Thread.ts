@@ -33,6 +33,7 @@ module Nicr.Controller {
             this.threadService.on('select:thread', (e) => { this.onSelectThread(e) });
             this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
             this.threadService.on('open:recent', (e) => { this.onOpenRecent(e) });
+            this.threadService.on('close:expired', (e) => { this.onCloseExpired(e) });
             this.commentService.on('fetch', (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.trash-button', (e) => { this.onClickTrashButton(e) });
@@ -146,6 +147,13 @@ module Nicr.Controller {
             var thread = this.recentlyClosed.pop();
             if (!thread) return;
             this.threadService.openThread(thread);
+        }
+
+        private onCloseExpired(event) {
+            var expired = this.tabModels.getList().filter((thread) => !thread.active);
+            expired.forEach((thread) => {
+                this.threadService.closeThread(thread);
+            });
         }
 
         private onClickTrashButton(event) {

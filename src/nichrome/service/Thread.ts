@@ -129,6 +129,11 @@ module Nicr.Service {
             this.emit('close:thread:' + thread.id(), {thread:thread});
         }
 
+        // just delegate.
+        closeExpired() {
+            this.emit('close:expired');
+        }
+
         // ---- cache with indexedDB ----
 
         private saveThreadsToIDB(board:Model.Board, threads:Model.Thread[]) {
