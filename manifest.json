@@ -13,10 +13,7 @@
         "128": "public/img/icon_128.png"
     },
     "permissions": [
-        "http://*.2ch.net/",
-        "http://*.machi.to/",
-        "http://*.bbspink.com/",
-
+        "http://*/*",
         "unlimitedStorage",
         "notifications",
         "geolocation",
