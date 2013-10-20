@@ -20,7 +20,7 @@ module Nicr {
             }
         }
 
-        emit(name, event) {
+        emit(name:string, event?) {
             var handlers = this.handlers[name] || [];
             for (var i = 0, len = handlers.length; i < len; i++) {
                 try {

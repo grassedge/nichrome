@@ -114,6 +114,11 @@ module Nicr.Service {
             this.saveActiveTabToStorage(thread.id());
         }
 
+        // just delegate.
+        openRecent() {
+            this.emit('open:recent');
+        }
+
         selectThread(thread:Model.Thread) {
             this.emit('select:thread', {thread:thread});
             this.saveActiveTabToStorage(thread.id());

@@ -29,7 +29,8 @@ Nicr.router.connect('index', function(match, location, guard) {
     var threadController = new Nicr.Controller.Thread({
         $el: $('.thread-container'),
         threadService: threadService,
-        commentService: commentService
+        commentService: commentService,
+        menuService: menuService
     });
     var threadListContextMenuController = new Nicr.Controller.ThreadListContextMenu({
         threadService: threadService,

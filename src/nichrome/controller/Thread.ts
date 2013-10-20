@@ -8,27 +8,37 @@ module Nicr.Controller {
 
         private tabModels: IndexedList<Model.Thread>;
         private activeThread: Model.Thread;
+        private recentlyClosed: Model.Thread[] = [];
 
         private threadService: Service.Thread;
         private commentService: Service.Comment;
+        private menuService: Service.Menu;
+
+        private recentMax: number = 10;
 
         constructor(args:{
             $el:JQuery;
             threadService:Service.Thread;
             commentService:Service.Comment;
+            menuService:Service.Menu;
         }) {
             this.$el = args.$el;
             this.threadService  = args.threadService;
             this.commentService = args.commentService;
+            this.menuService = args.menuService;
+
             this.tabModels = new IndexedList();
 
             this.threadService.on('add:thread', (e) => { this.onAddThread(e) });
             this.threadService.on('select:thread', (e) => { this.onSelectThread(e) });
             this.threadService.on('close:thread', (e) => { this.onCloseThread(e) });
+            this.threadService.on('open:recent', (e) => { this.onOpenRecent(e) });
             this.commentService.on('fetch', (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.trash-button', (e) => { this.onClickTrashButton(e) });
             this.$el.on('click', '.reload-thread-button', (e) => { this.onClickReloadThreadButton(e) });
+            this.$el.on('click', '.thread-menu-button', (e) => { this.onClickThreadMenuButton(e) });
+
             this.$el.find('.thread-tab').sortable();
             this.$el.on('sortstop', (e, ui) => { this.onSortStop(e, ui) });
         }
@@ -48,6 +58,13 @@ module Nicr.Controller {
 
                 var thread = this.tabModels.get(activeKey);
                 if (thread) this.threadService.selectThread(thread);
+            });
+
+            var menuHtml = JST['thread-popup-menu']();
+            this.$el.prepend(menuHtml);
+            new Controller.ThreadMenu({
+                $el: this.$el.find('.thread-menu'),
+                threadService: this.threadService
             });
         }
 
@@ -117,10 +134,30 @@ module Nicr.Controller {
             var reselect = thread.equals(this.activeThread);
             var idx = this.deleteThread(thread);
             if (reselect) this.selectThreadByIndex(idx);
+            this.recentlyClosed.push(thread);
+            if (this.recentlyClosed.length > this.recentMax) this.recentlyClosed.shift();
         }
 
         private onFetchThread(event) {
             this.setThreadTitle(this.activeThread);
+        }
+
+        private onOpenRecent(event) {
+            var thread = this.recentlyClosed.pop();
+            if (!thread) return;
+            this.threadService.openThread(thread);
+        }
+
+        private onClickTrashButton(event) {
+            this.threadService.closeThread(this.activeThread);
+        }
+
+        private onClickReloadThreadButton(event) {
+            this.commentService.fetchWithCache(this.activeThread, {force:true});
+        }
+
+        private onClickThreadMenuButton(event) {
+            this.$el.find('.thread-menu').show();
         }
 
         private onSortStop(event, ui) {
@@ -131,14 +168,6 @@ module Nicr.Controller {
             this.tabModels.splice(idx, 1);
             this.tabModels.splice($item.index(), 0, thread);
             this.threadService.saveTabToStorage(this.tabModels.getList());
-        }
-
-        private onClickTrashButton(event) {
-            this.threadService.closeThread(this.activeThread);
-        }
-
-        private onClickReloadThreadButton(event) {
-            this.commentService.fetchWithCache(this.activeThread, {force:true});
         }
     }
 
