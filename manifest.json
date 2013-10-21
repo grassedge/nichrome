@@ -1,12 +1,15 @@
 {
     "name": "nichrome",
     "description": "2ch browser",
-    "version": "0.0.1.2",
+    "version": "0.0.1.3",
     "manifest_version": 2,
-    "app": {
-        "launch": {
-            "local_path": "index.html"
-        }
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "browser_action": {
+        "default_icon": "public/img/icon_16.png",
+        "default_title": "nichrome"
     },
     "icons": {
         "16" : "public/img/icon_16.png",
@@ -14,9 +17,6 @@
     },
     "permissions": [
         "http://*/*",
-        "unlimitedStorage",
-        "notifications",
-        "geolocation",
-        "background"
+        "unlimitedStorage"
     ]
 }
