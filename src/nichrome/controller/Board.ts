@@ -119,14 +119,14 @@ module Nicr.Controller {
             this.setBoardTitle(board);
             this.setThreadListSize(board);
 
-            var prevBoard = this.activeBoard;
-            if (board.equals(prevBoard)) return;
+            var originalBoard = this.activeBoard;
+            if (board.equals(originalBoard)) return;
             this.activeBoard = board;
             this.$el.find('#board-tab-' + board.boardKey).addClass('selected');
             this.$el.find('#thread-list-' + board.boardKey).show();
-            if (!prevBoard) return;
-            this.$el.find('#board-tab-' + prevBoard.boardKey).removeClass('selected');
-            this.$el.find('#thread-list-' + prevBoard.boardKey).hide();
+            if (!originalBoard) return;
+            this.$el.find('#board-tab-' + originalBoard.boardKey).removeClass('selected');
+            this.$el.find('#thread-list-' + originalBoard.boardKey).hide();
         }
 
         private selectBoardByIndex(index:number) {
