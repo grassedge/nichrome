@@ -15,7 +15,8 @@ module Nicr.Controller {
         private configService: Service.Config;
         private boardService: Service.Board;
         private threadService: Service.Thread;
-        // don't use in these Controller. pass it to Controller.ThreadList
+        // Following Controllers are not used in here,
+        // These are passed to 'Controller.ThreadList'
         private commentService: Service.Comment;
         private menuService: Service.Menu;
 
