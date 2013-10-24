@@ -56,6 +56,9 @@ module Nicr.Controller {
                 container: $commentList,
                 effect: 'fadeIn'
             });
+            // lazyload handles 'scroll' event.
+            // To handle initially appearing image, publish $window.resize()
+            setTimeout(() => { $(window).resize() }, 0);
         }
 
         private updateTabItem() {
@@ -74,6 +77,7 @@ module Nicr.Controller {
                 container: $commentList,
                 effect: 'fadeIn'
             });
+            setTimeout(() => { $(window).resize() }, 0);
         }
 
         private onFetchThread(event) {

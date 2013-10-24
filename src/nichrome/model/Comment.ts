@@ -83,9 +83,10 @@ module Nicr.Model {
                 function(whole, path, suffix) {
                     var full = (whole[0] == 'h' ? '' : 'h') + whole;
                     return whole.match(/(jpeg|jpg|png|gif)$/i)
-                        ? '<div><img class="image" src="' + full + '" /></div>'
+                        ? '<div><img class="image" src="/public/img/image-loader.gif" '
+                                  + 'data-original="' + full + '"/></div>'
                         : '<a href="' + full + '" class="autolink" target="_blank">'
-                        + whole + '</a>';
+                          + whole + '</a>';
                 }
             );
         }
