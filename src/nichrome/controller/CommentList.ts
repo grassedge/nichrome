@@ -1,5 +1,9 @@
 /// <reference path="../service/Thread.ts" />
 
+interface JQuery {
+    lazyload(...args:any[]): JQuery;
+}
+
 module Nicr.Controller {
 
     export class CommentList {
@@ -45,7 +49,13 @@ module Nicr.Controller {
 
         private render() {
             var html = JST['comment-list']({comments:this.comments});
-            this.$el.find('.comment-list').html(html);
+            var $commentList = this.$el.find('.comment-list');
+            $commentList.html(html);
+            // I'd like to delegate to $commentList.
+            $commentList.find('.image').lazyload({
+                container: $commentList,
+                effect: 'fadeIn'
+            });
         }
 
         private updateTabItem() {
@@ -57,7 +67,13 @@ module Nicr.Controller {
 
         private renderExpired(expired) {
             var html = JST['comment-expired']({expired:expired});
-            this.$el.find('.comment-list').html(html);
+            var $commentList = this.$el.find('.comment-list');
+            $commentList.html(html);
+            // I'd like to delegate to $commentList.
+            $commentList.find('.image').lazyload({
+                container: $commentList,
+                effect: 'fadeIn'
+            });
         }
 
         private onFetchThread(event) {
