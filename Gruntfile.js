@@ -85,15 +85,16 @@ module.exports = function(grunt) {
             },
             less: {
                 files: ['public/less/*.less','public/less/lib/*.less'],
-                tasks: ['less', 'cssmin']
+                tasks: ['less']
             },
             typescript: {
                 files: ['src/nichrome/**/*.ts'],
-                tasks: ['typescript', 'uglify']
+                tasks: ['typescript']
             }
         },
     });
 
-    grunt.task.registerTask('default', ['jst', 'less', 'cssmin', 'typescript', 'uglify']);
+    grunt.task.registerTask('build', ['jst', 'less', 'cssmin', 'typescript', 'uglify']);
+    grunt.task.registerTask('default', ['build', 'watch']);
 }
 
