@@ -33,7 +33,10 @@ module.exports = function(grunt) {
 
         typescript: {
             client: {
-                src: ['src/nichrome/**/*.ts'],
+                src: [
+                    'src/nichrome/**/*.ts',
+                    'src/worker/*.ts'
+                ],
                 dest: 'public/js/src',
                 options: {
                     module: 'commonjs',
