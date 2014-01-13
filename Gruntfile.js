@@ -91,7 +91,7 @@ module.exports = function(grunt) {
                 tasks: ['less']
             },
             typescript: {
-                files: ['src/nichrome/**/*.ts'],
+                files: ['src/nichrome/**/*.ts','src/worker/*.ts'],
                 tasks: ['typescript']
             }
         },
