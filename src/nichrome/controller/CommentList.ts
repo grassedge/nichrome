@@ -42,6 +42,7 @@ module Nicr.Controller {
             this.$el.on('click', '.comment-list-down-button', (e) => { this.onClickDownButton(e) });
             this.$el.on('click', '.comment-list-link-button', (e) => { this.onClickLinkButton(e) });
             this.$el.on('click', '.comment-list-image-button', (e) => { this.onClickImageButton(e) });
+            this.$el.on('click', '.comment-list-download-button', (e) => { this.onClickDownloadButton(e) });
             this.$tabItem.on('click', (e) => { this.onClickThreadTabItem(e) });
             this.$tabItem.on('dblclick', (e) => { this.onDblClickThreadTabItem(e) });
             this.$tabItem.on('click', '.close-button', (e) => { this.onClickCloseButton(e) });
@@ -172,6 +173,34 @@ module Nicr.Controller {
                 $button.parent().find('.on').removeClass('on');
                 $button.addClass('on');
             }
+        }
+
+        private onClickDownloadButton(event) {
+            var $button = $(event.currentTarget);
+
+            var urls = Array.prototype.map.call(
+                this.$el.find('.image'),
+                (img) => $(img).attr('data-original')
+            );
+
+            var worker = new Worker("public/js/worker/image-zipper.js");
+            worker.postMessage({urls:urls});
+            var i = 0;
+            worker.addEventListener('message', (event) => {
+                var command = event.data.command;
+                if (command === 'download') {
+                    var filename = event.data.filename;
+                    console.log((++i) + ':' + filename);
+                }
+                if (command === 'complete') {
+                    var blob = event.data.blob;
+                    var $a = $('<a class="hoge">download</a>');
+                    $a.attr('href', window.URL.createObjectURL(blob));
+                    $a.attr('download', this.thread.id() + ".zip");
+                    this.$el.append($a);
+                    worker.terminate();
+                }
+            });
         }
 
         private onClickThreadTabItem(event) {
