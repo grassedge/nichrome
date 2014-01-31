@@ -16,7 +16,13 @@ module Nicr.Model {
         private _hasLink: boolean;
 
         constructor(args) {
-            for (var key in args) this[key] = args[key];
+            this.name      = args.name;
+            this.mail      = args.mail;
+            this.createdAt = args.createdAt;
+            this.authorId  = args.authorId;
+            this.body      = args.body;
+            this.title     = args.title;
+            this.number    = args.number;
         }
 
         static fromDatText(datText:string):Comment[] {
