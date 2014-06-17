@@ -1,5 +1,7 @@
 /// <reference path="../d.ts/DefinitelyTyped/jquery/jquery.d.ts" />
 
+declare var IDBKeyRange:IDBKeyRange;
+
 module Nicr {
 
     export class IDBManager {
@@ -79,8 +81,8 @@ module Nicr {
             var idx = opts.indexName ? store.index(opts.indexName) : undefined;
 
             var range = !key              ? null
-                : opts.condition === 'gt' ? <IDBKeyRange>((<any>IDBKeyRange).lowerBound(key))
-                                          : <IDBKeyRange>((<any>IDBKeyRange).only(key));
+                : opts.condition === 'gt' ? IDBKeyRange.lowerBound(key)
+                                          : IDBKeyRange.only(key);
 
             var req = idx ? idx.openCursor(range) : store.openCursor(range);
             var d = $.Deferred();
