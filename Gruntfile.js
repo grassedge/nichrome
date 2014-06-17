@@ -41,11 +41,11 @@ module.exports = function(grunt) {
                 options: {
                     module: 'commonjs',
                     target: 'es5',
-                    base_path: 'src',
+                    basePath: 'src',
                     sourcemap: false,
                     fullSourceMapPath: false,
                     declaration: false,
-                    ignoreTypeCheck: true,
+                    ignoreError: true,
                 }
             }
         },
