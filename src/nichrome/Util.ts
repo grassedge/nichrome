@@ -1,6 +1,6 @@
 module Nicr {
 
-    interface Indexed {
+    export interface Indexed {
         id?:any;
     };
 
@@ -9,7 +9,7 @@ module Nicr {
         private index: any;
         private list: T[];
 
-        constructor(array?:any[]) {
+        constructor(array?:T[]) {
             this.index = {};
             this.list = (array === undefined) ? [] : [].concat(array);
             this.list.forEach((value) => {
@@ -27,7 +27,7 @@ module Nicr {
         }
 
         splice(index:number, howMany:number, ...values:T[]):T[] {
-            var args = [index, howMany].concat(values);
+            var args = (<any[]>[index, howMany]).concat(values);
             var removed = Array.prototype.splice.apply(this.list, args);
             values.forEach((value) => {
                 this.index[value.id()] = value;
@@ -59,13 +59,16 @@ module Nicr {
             return this.list;
         }
 
-        forEach(callback:any):void {
-            this.list.forEach(callback);
+        forEach(
+            callback: (value: T, index: number, array: T[]) => void ,
+            thisArg?: any
+        ): void {
+            this.list.forEach(callback, thisArg);
         }
 
         sort(compare:(a:T, b:T) => number):IndexedList<T> {
             var sorted = this.list.sort(compare);
-            return new IndexedList(sorted);
+            return new IndexedList<T>(sorted);
         }
 
         // map(callback:any):IndexedList<T> {
