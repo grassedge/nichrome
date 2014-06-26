@@ -27,7 +27,7 @@ module Nicr.Controller {
             this.commentService = args.commentService;
             this.menuService = args.menuService;
 
-            this.tabModels = new IndexedList();
+            this.tabModels = new IndexedList<Model.Thread>();
 
             this.threadService.on('add:thread', (e) => { this.onAddThread(e) });
             this.threadService.on('select:thread', (e) => { this.onSelectThread(e) });
@@ -50,7 +50,7 @@ module Nicr.Controller {
 
             var tab = this.threadService.retrieveTabFromStorage();
             this.threadService.retrieveByKeysFromIDB(tab).done((storedList) => {
-                var threads = new IndexedList(storedList);
+                var threads = new IndexedList<Model.Thread>(storedList);
 
                 tab.forEach((thread) => {
                     var stored = threads.get(thread.id());

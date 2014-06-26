@@ -1,4 +1,3 @@
-declare var postMessage:any;
 declare var Promise:any;
 var global = self;
 importScripts("/public/js/jszip.js");
@@ -20,7 +19,7 @@ self.addEventListener('message', function(event) {
             postMessage({
                 command: 'download',
                 filename: filename
-            });
+            }, undefined);
             resolve(true);
         };
         xhr.onerror = (event) => { resolve(false) };
@@ -30,6 +29,6 @@ self.addEventListener('message', function(event) {
         postMessage({
             command: 'complete',
             blob: zip.generate({type:"blob"})
-        });
+        }, undefined);
     });
 });

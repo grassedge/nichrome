@@ -35,7 +35,7 @@ module Nicr.Controller {
             this.commentService = args.commentService;
             this.menuService = args.menuService;
 
-            this.tabModels = new IndexedList();
+            this.tabModels = new IndexedList<Model.Board>();
 
             this.boardService.on('add:board', (e) => { this.onAddBoard(e) });
             this.boardService.on('select:board', (e) => { this.onSelectBoard(e) });

@@ -15,10 +15,10 @@ module Nicr.Service {
             var url = thread.datUrl();
             return $.ajax(url, {
                 mimeType: 'text/plain; charset=shift_jis'
-            }).then((datText:string, status:string, $xhr:JQueryXHR) => {
+            }).then((datText:string, status:number, $xhr:JQueryXHR):any => {
                 var status = $xhr.status;
                 console.log(status);
-                if (status == '203') {
+                if (status == 203) {
                     var expired = Model.Comment.parseExpiredDat(datText);
                     this.emit('fetch:expired', expired);
                     this.emit('fetch:expired:' + thread.boardKey, expired);
@@ -48,7 +48,7 @@ module Nicr.Service {
 
             if (args.force) { return this.fetchAndCache(thread); }
 
-            return this.retrieveFromIDB(thread).then((comments:Model.Comment[]) => {
+            return this.retrieveFromIDB(thread).then((comments:Model.Comment[]):any => {
                 if (comments) {
                     var data = {thread:thread, comments:comments};
                     this.emit('fetch', data);

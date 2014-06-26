@@ -11,7 +11,7 @@ module Nicr.Controller {
         private $tabItem: JQuery;
         private board: Model.Board;
         private threads: IndexedList<Model.Thread>;
-        private selectedList: IndexedList<Model.Thread> = new IndexedList();
+        private selectedList = new IndexedList<Model.Thread>();
         private sortKey: string;
         private sortOrder: number;
 
@@ -77,7 +77,7 @@ module Nicr.Controller {
                 threads.sort((a,b) => (+a[key] > +b[key] ? -1 : 1) * sign);
             }
             var originalThreads = this.threads;
-            this.threads = threads = new IndexedList(threads);
+            this.threads = threads = new IndexedList<Model.Thread>(threads);
             threads.forEach((thread:Model.Thread) => {
                 if (!originalThreads) return;
                 var originalThread = originalThreads.get(thread.id());
