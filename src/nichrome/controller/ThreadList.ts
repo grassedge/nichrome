@@ -12,6 +12,7 @@ module Nicr.Controller {
         private board: Model.Board;
         private threads: IndexedList<Model.Thread>;
         private selectedList = new IndexedList<Model.Thread>();
+        private filterQuery: string = '';
         private sortKey: string;
         private sortOrder: number;
 
@@ -71,6 +72,7 @@ module Nicr.Controller {
 
         private onFetch(event) {
             var threads = event.threads;
+            var query = this.filterQuery;
             var key = this.sortKey;
             var sign = this.sortOrder;
             if (this.sortKey && this.sortOrder) {
@@ -89,6 +91,8 @@ module Nicr.Controller {
                 }
             });
             this.render();
+            this.$el.find('.thread-list-item').hide();
+            this.$el.find('.thread-list-item:contains(' + query + ')').show();
             this.$el.find('.thread-list').removeClass('translucence');
         }
 
@@ -173,6 +177,7 @@ module Nicr.Controller {
         private onSubmitFilter(event) {
             event.preventDefault();
             var query = $(event.target).find('input').val();
+            this.filterQuery = query;
             this.$el.find('.thread-list-item').hide();
             this.$el.find('.thread-list-item:contains(' + query + ')').show();
         }
