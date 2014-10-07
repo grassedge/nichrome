@@ -46,6 +46,7 @@ module Nicr.Controller {
             this.commentService.on('fetch:' + this.board.id(), (e) => { this.onFetchThread(e) });
 
             this.$el.on('click', '.thread-list-item', (e) => { this.onClickThreadListItem(e) });
+            this.$el.on('dblclick', '.thread-list-item', (e) => { this.onDblClickThreadListItem(e) });
             this.$el.on('submit', '.thread-list-filter', (e) => { this.onSubmitFilter(e) });
             this.$el.on('click', '.thread-list-header', (e) => { this.onClickThreadListHeader(e) });
             this.$el.on('contextmenu', '.thread-list-item', (e) => { this.onContextMenu(e) });
@@ -172,6 +173,16 @@ module Nicr.Controller {
                 this.renderSelected();
                 this.threadService.openThread(thread);
             }
+        }
+
+        private onDblClickThreadListItem(event) {
+            var $threadListItem = $(event.currentTarget);
+            var threadKey = $threadListItem.attr('data-thread-key');
+            var boardKey = $threadListItem.attr('data-board-key');
+            var key = boardKey + '-' + threadKey;
+            var thread = this.threads.get(key);
+
+            this.commentService.fetchWithCache(thread, {force:true});
         }
 
         private onSubmitFilter(event) {
